@@ -43,7 +43,7 @@ data Mission = Mission Location Target
 newtype EnemyUnitsTSV = EnemyUnitsTSV T.Text
 
 energy :: [Stage] -> Energy
-energy = foldr (\(Stage _ _ e) acc -> e + acc) 0
+energy = foldr (\(Stage _ _ e) -> (e +)) 0
 
 newtype Stages = Stages [Stage]
   deriving (Eq, Show)
