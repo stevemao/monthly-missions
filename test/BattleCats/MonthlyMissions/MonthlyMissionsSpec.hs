@@ -1,9 +1,9 @@
 module BattleCats.MonthlyMissions.TypesSpec (main, spec) where
 
-import Test.Hspec
-import Test.QuickCheck
+import           Test.Hspec
+import           Test.QuickCheck
 
-import BattleCats.MonthlyMissions.Types
+import           BattleCats.MonthlyMissions.Types
 
 -- `main` is here so that this module can be run from GHCi on its own.  It is
 -- not needed for automatic spec discovery.

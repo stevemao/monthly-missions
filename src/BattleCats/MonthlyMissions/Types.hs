@@ -1,15 +1,11 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module BattleCats.MonthlyMissions.Types where
 
-import qualified Data.Text as T
+import qualified Data.Text                        as T
 import           Database.SQLite.Simple
 import           Database.SQLite.Simple.FromField
-
-newtype Level = Level T.Text
-    deriving (Show, FromField, Eq)
-
-instance FromRow Level where
-  fromRow = Level <$> field
+import           Database.SQLite.Simple.ToField
+import           GHC.Exts                         (IsString (..))
 
 newtype StageName = StageName T.Text
     deriving (Show, FromField, Eq)
@@ -31,10 +27,19 @@ instance FromRow Stage where
 
 newtype EnemyCode = EnemyCode Int
 
-newtype Location = Location T.Text
-    deriving Show
+newtype Level = Level T.Text
+    deriving (Show, FromField, Eq, IsString, ToField)
+
+instance FromRow Level where
+  fromRow = Level <$> field
 
 newtype Target = Target T.Text
+    deriving Show
+
+newtype Category = Category T.Text
+    deriving (Show, IsString, ToField)
+
+data Location = LocationLevel Level | LocationCategory Category
     deriving Show
 
 data Mission = Mission Location Target
