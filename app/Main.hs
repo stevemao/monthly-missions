@@ -11,12 +11,15 @@ eocCh3 = LocationLevel "EoC Ch.3"
 itfCh1 = LocationLevel "ItF Ch.1"
 itfCh2 = LocationLevel "ItF Ch.2"
 sol = LocationCategory "SoL"
+cotcCh1 = LocationLevel "CotC Ch.1"
+cotcCh2 = LocationLevel "CotC Ch.2"
+cotcCh3 = LocationLevel "CotC Ch.3"
 
 main :: IO ()
 main = do
-  let missions = [Mission itfCh2 (Target "Corrupted Valkyrie")
-                , Mission sol (Target "Camelle")
-                , Mission sol (Target "Director Kurosawah")]
+  let missions = [Mission sol (Target "Dolphina")
+                , Mission cotcCh3 (Target "Shibalien Elite")
+                , Mission cotcCh3 (Target "UltraBaaBaa")]
 
   enemyunits <- TIO.readFile "./data/enemyunits.tsv"
 
