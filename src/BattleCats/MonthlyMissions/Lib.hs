@@ -29,10 +29,8 @@ getStages conn enemyunits m@(Mission location target) = do
 
                             return $ (\(Stage _ n e) -> Stage level n (e + energyAdjustment)) <$> stages
       LocationCategory category -> do
-                            stages <- queryNamed conn "SELECT level, stage, energy from stages s JOIN units u ON u.stageid = s.stageid WHERE u.enemycode = :enemycode AND category = :category" [":enemycode" := enemycode, ":category" := category]
-
-                            return stages
-    if stages == []
+                            queryNamed conn "SELECT level, stage, energy from stages s JOIN units u ON u.stageid = s.stageid WHERE u.enemycode = :enemycode AND category = :category" [":enemycode" := enemycode, ":category" := category]
+    if null stages
     then throwIO (error $ "could not find " <> show m :: SomeException)
     else return $ nub stages
 
