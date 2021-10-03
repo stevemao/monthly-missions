@@ -26,7 +26,7 @@ getStages conn enemyunits m@(Mission location target) = do
                                                           "EoC Ch.3" -> ("EoC", 20, ["Moon Ch.1", "Moon Ch.2"])
                                                           l          -> (l, 0, [])
 
-                            let excludedStagesIndex = [0..length excludedStages]
+                            let excludedStagesIndex = [0..length excludedStages - 1]
                             let excludedStagesWithIndex = zip excludedStages excludedStagesIndex
 
                             let extraQuery = foldr (\i acc -> " AND stage != :excludedStage" <> (Query . T.pack . show $ i) <> acc) "" excludedStagesIndex
