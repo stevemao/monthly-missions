@@ -1,4 +1,5 @@
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings   #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 module BattleCats.MonthlyMissions.Lib where
 
 import           BattleCats.MonthlyMissions.Types
@@ -19,13 +20,20 @@ getStages conn enemyunits m@(Mission location target) = do
     stages <- case location of
       LocationLevel level -> do
                             -- This is a hack for inaccurate EoC Stages
-                            let (level', energyAdjustment) = case level of
-                                                            "EoC Ch.1" -> ("EoC", 0)
-                                                            "EoC Ch.2" -> ("EoC", 10)
-                                                            "EoC Ch.3" -> ("EoC", 20)
-                                                            l          -> (l, 0)
+                            let (level', energyAdjustment, excludedStages :: [T.Text]) = case level of
+                                                          "EoC Ch.1" -> ("EoC", 0, ["Moon Ch.2", "Moon Ch.3"])
+                                                          "EoC Ch.2" -> ("EoC", 10, ["Moon Ch.1", "Moon Ch.3"])
+                                                          "EoC Ch.3" -> ("EoC", 20, ["Moon Ch.1", "Moon Ch.2"])
+                                                          l          -> (l, 0, [])
 
-                            stages <- queryNamed conn "SELECT level, stage, energy from stages s JOIN units u ON u.stageid = s.stageid WHERE u.enemycode = :enemycode AND level = :level" [":enemycode" := enemycode, ":level" := level']
+                            let excludedStagesIndex = [0..length excludedStages]
+                            let excludedStagesWithIndex = zip excludedStages excludedStagesIndex
+
+                            let extraQuery = foldr (\i acc -> " AND stage != :excludedStage" <> (Query . T.pack . show $ i) <> acc) "" excludedStagesIndex
+
+                            let extraParam = (\(s, i) -> (":excludedStage" <> (T.pack . show $ i)) := s) <$> excludedStagesWithIndex
+
+                            stages <- queryNamed conn ("SELECT level, stage, energy from stages s JOIN units u ON u.stageid = s.stageid WHERE u.enemycode = :enemycode AND level = :level" <> extraQuery) ([":enemycode" := enemycode, ":level" := level'] <> extraParam)
 
                             return $ (\(Stage _ n e) -> Stage level n (e + energyAdjustment)) <$> stages
       LocationCategory category -> do

@@ -6,6 +6,7 @@ import           BattleCats.MonthlyMissions.Types
 import qualified Data.Text.IO                     as TIO
 import           Database.SQLite.Simple
 
+eocCh2, eocCh3, itfCh1, itfCh2, sol, cotcCh1, cotcCh2, cotcCh3 :: Location
 eocCh2 = LocationLevel "EoC Ch.2"
 eocCh3 = LocationLevel "EoC Ch.3"
 itfCh1 = LocationLevel "ItF Ch.1"
@@ -17,9 +18,9 @@ cotcCh3 = LocationLevel "CotC Ch.3"
 
 main :: IO ()
 main = do
-  let missions = [ Mission sol (Target "Zackie Peng")
-                 , Mission sol (Target "Lord Gravey")
-                 , Mission sol (Target "Shibalien Elite") ]
+  let missions = [ Mission eocCh2 (Target "Sir Seal")
+                 , Mission eocCh2 (Target "Croco")
+                 , Mission eocCh2 (Target "Mooth") ]
 
   enemyunits <- TIO.readFile "./data/enemyunits.tsv"
 
