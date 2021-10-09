@@ -10,7 +10,7 @@ import           Database.SQLite.Simple
 
 getCode :: EnemyUnitsTSV -> Target -> IO EnemyCode
 getCode (EnemyUnitsTSV enemyunits) t@(Target target) = do
-  let maybeIdx = subtract 1 <$> findIndex (target `T.isInfixOf`) (T.lines enemyunits)
+  let maybeIdx = subtract 1 <$> findIndex (("\t" <> target <> "\t") `T.isInfixOf`) (T.lines enemyunits)
 
   maybe (throwIO (error $ "could not find " <> show t :: SomeException)) (return . EnemyCode) maybeIdx
 
