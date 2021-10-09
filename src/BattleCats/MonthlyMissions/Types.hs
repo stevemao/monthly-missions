@@ -1,6 +1,8 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module BattleCats.MonthlyMissions.Types where
 
+import           Data.List.NonEmpty
+import qualified Data.Map.Strict                  as M
 import qualified Data.Text                        as T
 import           Database.SQLite.Simple
 import           Database.SQLite.Simple.FromField
@@ -8,7 +10,7 @@ import           Database.SQLite.Simple.ToField
 import           GHC.Exts                         (IsString (..))
 
 newtype StageName = StageName T.Text
-    deriving (Show, FromField, Eq)
+    deriving (Show, FromField, Eq, Ord)
 
 instance FromRow StageName where
   fromRow = StageName <$> field
@@ -19,16 +21,22 @@ newtype Energy = Energy Int
 instance FromRow Energy where
   fromRow = Energy <$> field
 
-data Stage = Stage Level StageName Energy
-    deriving (Show, Eq)
+newtype HpSpawn = HpSpawn T.Text
+  deriving (Show, FromField)
 
-instance FromRow Stage where
-  fromRow = Stage <$> field <*> field <*> field
+newtype FirstSpawn = FirstSpawn Int
+  deriving (Show, FromField, Eq, Ord)
+
+data FromRowStage = FromRowStage Level StageName Energy HpSpawn FirstSpawn
+    deriving (Show)
+
+instance FromRow FromRowStage where
+  fromRow = FromRowStage <$> field <*> field <*> field <*> field <*> field
 
 newtype EnemyCode = EnemyCode Int
 
 newtype Level = Level T.Text
-    deriving (Show, FromField, Eq, IsString, ToField)
+    deriving (Show, FromField, Eq, IsString, ToField, Ord)
 
 instance FromRow Level where
   fromRow = Level <$> field
@@ -47,11 +55,35 @@ data Mission = Mission Location Target
 
 newtype EnemyUnitsTSV = EnemyUnitsTSV T.Text
 
-energy :: [Stage] -> Energy
-energy = foldr (\(Stage _ _ e) -> (e +)) 0
+data Enemy = Enemy HpSpawn FirstSpawn Target
+  deriving (Show)
 
-newtype Stages = Stages [Stage]
-  deriving (Eq, Show)
+newtype FastestEnemy = FastestEnemy Enemy
 
-instance Ord Stages where
-  Stages stagesA <= Stages stagesB = energy stagesA <= energy stagesB
+instance Eq FastestEnemy where
+  FastestEnemy (Enemy _ firstSpawnA _) == FastestEnemy (Enemy _ firstSpawnB _) = firstSpawnA == firstSpawnB
+
+instance Ord FastestEnemy where
+  FastestEnemy (Enemy _ firstSpawnA _) <= FastestEnemy (Enemy _ firstSpawnB _) = firstSpawnA <= firstSpawnB
+
+data Stage = Stage Level StageName Energy
+  deriving (Show, Eq, Ord)
+
+type StageEnemies = M.Map Stage (NonEmpty Enemy)
+
+getEnergy :: NonEmpty Stage -> Energy
+getEnergy = foldr (\(Stage _ _ e) -> (e +)) 0
+
+getEnergy' :: NonEmpty StageWithEnemy -> Energy
+getEnergy' stages = getEnergy (fst <$> stages)
+
+type StageWithEnemy = (Stage, NonEmpty Enemy)
+
+newtype MinEnergyStages = MinEnergyStages (NonEmpty StageWithEnemy)
+  deriving (Show)
+
+instance Eq MinEnergyStages where
+  MinEnergyStages stagesA == MinEnergyStages stagesB = getEnergy' stagesA == getEnergy' stagesB
+
+instance Ord MinEnergyStages where
+  MinEnergyStages stagesA <= MinEnergyStages stagesB = getEnergy' stagesA <= getEnergy' stagesB
