@@ -2,7 +2,6 @@
 module BattleCats.MonthlyMissions.Types where
 
 import           Data.List.NonEmpty
-import qualified Data.Map.Strict                  as M
 import qualified Data.Text                        as T
 import           Database.SQLite.Simple
 import           Database.SQLite.Simple.FromField
@@ -68,8 +67,6 @@ instance Ord FastestEnemy where
 
 data Stage = Stage Level StageName Energy
   deriving (Show, Eq, Ord)
-
-type StageEnemies = M.Map Stage (NonEmpty Enemy)
 
 getEnergy :: NonEmpty Stage -> Energy
 getEnergy = foldr (\(Stage _ _ e) -> (e +)) 0
