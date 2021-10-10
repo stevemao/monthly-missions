@@ -21,7 +21,7 @@ instance FromRow Energy where
   fromRow = Energy <$> field
 
 newtype HpSpawn = HpSpawn T.Text
-  deriving (Show, FromField)
+  deriving (Show, FromField, Eq)
 
 newtype FirstSpawn = FirstSpawn Int
   deriving (Show, FromField, Eq, Ord)
@@ -41,7 +41,7 @@ instance FromRow Level where
   fromRow = Level <$> field
 
 newtype Target = Target T.Text
-    deriving Show
+    deriving (Show, Eq)
 
 newtype Category = Category T.Text
     deriving (Show, IsString, ToField)
@@ -55,7 +55,7 @@ data Mission = Mission Location Target
 newtype EnemyUnitsTSV = EnemyUnitsTSV T.Text
 
 data Enemy = Enemy HpSpawn FirstSpawn Target
-  deriving (Show)
+  deriving (Show, Eq)
 
 newtype FastestEnemy = FastestEnemy Enemy
 

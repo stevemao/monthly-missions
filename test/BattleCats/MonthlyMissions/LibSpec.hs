@@ -26,7 +26,9 @@ spec = do
                 , Enemy (HpSpawn "100%") (FirstSpawn 200) (Target "Cat God")
               ]) :| []
 
-      findMinEnergy group `shouldBe` MinEnergyStages expected
+      let (MinEnergyStages stages) = findMinEnergy group
+
+      stages `shouldBe` expected
 
     it "a few groups" $ do
       let group = (
@@ -79,7 +81,9 @@ spec = do
                 , Enemy (HpSpawn "100%") (FirstSpawn 200) (Target "Cat God")
               ]) :| []
 
-      findMinEnergy group `shouldBe` MinEnergyStages expected
+      let (MinEnergyStages stages) = findMinEnergy group
+
+      stages `shouldBe` expected
 
     it "multiple groups" $ do
       let group = (
@@ -462,6 +466,8 @@ spec = do
                 , Enemy (HpSpawn "100%") (FirstSpawn 200) (Target "Cat God")
               ]) :| []
 
-      findMinEnergy group `shouldBe` MinEnergyStages expected
+      let (MinEnergyStages stages) = findMinEnergy group
+
+      stages `shouldBe` expected
     -- it "is idempotent" $ property $
     --   \str -> strip str === strip (strip str)
