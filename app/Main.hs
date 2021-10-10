@@ -6,6 +6,7 @@ import           BattleCats.MonthlyMissions.Types
 import           Data.List.NonEmpty               (NonEmpty ((:|)))
 import qualified Data.Text.IO                     as TIO
 import           Database.SQLite.Simple
+import           Text.Pretty.Simple               (pPrint)
 
 eocCh2, eocCh3, itfCh1, itfCh2, sol, cotcCh1, cotcCh2, cotcCh3 :: Location
 eocCh2 = LocationLevel "EoC Ch.2"
@@ -33,6 +34,6 @@ main = do
 
   let stages = findMinEnergy stagess
 
-  print stages
+  pPrint stages
 
   close conn
