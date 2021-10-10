@@ -19,7 +19,7 @@ getCode (EnemyUnitsTSV enemyunits) t@(Target target) = do
 
 getStages :: Connection -> EnemyUnitsTSV -> Mission -> IO (NonEmpty StageWithEnemy)
 getStages conn enemyunits m@(Mission location target) = do
-    EnemyCode enemycode <- getCode enemyunits target
+    code@(EnemyCode enemycode) <- getCode enemyunits target
     stages <- case location of
       LocationLevel level -> do
                             -- This is a hack for inaccurate EoC stages
@@ -46,12 +46,12 @@ getStages conn enemyunits m@(Mission location target) = do
         Just nonEmptyStages -> do
           let fromRowStage = groupBy1 (\(FromRowStage levelA nameA energyA _ _) (FromRowStage levelB nameB energyB _ _) -> Stage levelA nameA energyA == Stage levelB nameB energyB) nonEmptyStages
 
-          return $ findFastestEnemy target <$> fromRowStage
+          return $ findFastestEnemy target code <$> fromRowStage
 
-findFastestEnemy :: Target -> NonEmpty FromRowStage -> StageWithEnemy
-findFastestEnemy t s@(FromRowStage level name energy _ _ :| _) = (Stage level name energy, fastestEnemies)
+findFastestEnemy :: Target -> EnemyCode -> NonEmpty FromRowStage -> StageWithEnemy
+findFastestEnemy t c s@(FromRowStage level name energy _ _ :| _) = (Stage level name energy, fastestEnemies)
     where fastestEnemies = (\(FastestEnemy e) -> e) <$> minimum (FastestEnemy <$> enemies) :| []
-          enemies = (\(FromRowStage _ _ _ hpSpawn firstSpawn) -> Enemy hpSpawn firstSpawn t) <$> s
+          enemies = (\(FromRowStage _ _ _ hpSpawn firstSpawn) -> Enemy hpSpawn firstSpawn t c) <$> s
 
 findMinEnergy :: NonEmpty (NonEmpty StageWithEnemy) -> MinEnergyStages
 findMinEnergy stageEnemies = minimum stages

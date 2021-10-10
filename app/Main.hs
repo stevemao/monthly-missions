@@ -1,12 +1,16 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 
+import           BattleCats.Image
 import           BattleCats.MonthlyMissions.Lib
 import           BattleCats.MonthlyMissions.Types
+import qualified Data.ByteString                  as BS
+import           Data.Foldable
 import           Data.List.NonEmpty               (NonEmpty ((:|)))
 import qualified Data.Text.IO                     as TIO
 import           Database.SQLite.Simple
 import           Text.Pretty.Simple
+import Text.Pretty.Simple.Internal.Color
 
 eocCh2, eocCh3, itfCh1, itfCh2, sol, cotcCh1, cotcCh2, cotcCh3 :: Location
 eocCh2 = LocationLevel "EoC Ch.2"
@@ -32,8 +36,32 @@ main = do
 
   stagess <- traverse (getStages conn eu) missions
 
-  let stages = findMinEnergy stagess
+  let (MinEnergyStages stages) = findMinEnergy stagess
 
-  pPrint stages
+  traverse_ (\(stage, enemies) -> do
+      BS.putStr "\n"
+
+      pPrint stage
+
+      traverse (\enemy@(Enemy _ _ _ code) -> do
+            pPrintOpt CheckColorTty defaultOutputOptionsDarkBg { outputOptionsInitialIndent = 4
+                                                               , outputOptionsColorOptions = Just (defaultColorOptionsDarkBg { 
+                                                                    colorRainbowParens = [ colorBold Vivid Cyan
+                                                                                         , colorBold Vivid Yellow
+                                                                                         , color Dull Magenta
+                                                                                         , color Dull Cyan
+                                                                                         , color Dull Yellow
+                                                                                         , colorBold Dull Magenta
+                                                                                         , colorBold Dull Cyan
+                                                                                         , colorBold Dull Yellow
+                                                                                         , color Vivid Magenta
+                                                                                         , color Vivid Cyan
+                                                                                         , color Vivid Yellow
+                                                                                         , colorBold Vivid Magenta ] }) } enemy
+            image <- getImage code
+            BS.putStr "         "
+            BS.putStr image
+        ) enemies
+      ) stages
 
   close conn

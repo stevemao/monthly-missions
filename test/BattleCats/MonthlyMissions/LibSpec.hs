@@ -25,7 +25,8 @@ spec = do
               , Enemy
                   ( HpSpawn "100%" )
                   ( FirstSpawn 300 )
-                  ( Target "Shibalien Elite" ) :| []
+                  ( Target "Shibalien Elite" )
+                  ( EnemyCode 360 ) :| []
               ) :|
             []
             ) :|
@@ -37,7 +38,8 @@ spec = do
                       , Enemy
                           ( HpSpawn "50%" )
                           ( FirstSpawn 0 )
-                          ( Target "Star Peng" ) :| []
+                          ( Target "Star Peng" )
+                          ( EnemyCode 361 ) :| []
                       ) :|
                     []
                 ,
@@ -48,13 +50,14 @@ spec = do
                     , Enemy
                         ( HpSpawn "100%" )
                         ( FirstSpawn 200 )
-                        ( Target "Cat God" ) :| []
+                        ( Target "Cat God" )
+                        ( EnemyCode 419 ) :| []
                     ) :| []
                 ]
 
-      let expected = (Stage (Level "CotC Ch.2") (StageName "The Big Bang") (Energy 110),Enemy (HpSpawn "100%") (FirstSpawn 300) (Target "Shibalien Elite") :| [
-                  Enemy (HpSpawn "50%") (FirstSpawn 0) (Target "Star Peng")
-                , Enemy (HpSpawn "100%") (FirstSpawn 200) (Target "Cat God")
+      let expected = (Stage (Level "CotC Ch.2") (StageName "The Big Bang") (Energy 110),Enemy (HpSpawn "100%") (FirstSpawn 300) (Target "Shibalien Elite") ( EnemyCode 360 ) :| [
+                  Enemy (HpSpawn "50%") (FirstSpawn 0) (Target "Star Peng") ( EnemyCode 361 )
+                , Enemy (HpSpawn "100%") (FirstSpawn 200) (Target "Cat God") ( EnemyCode 419 )
               ]) :| []
 
       let (MinEnergyStages stages) = findMinEnergy group
@@ -70,7 +73,8 @@ spec = do
             , Enemy
                 ( HpSpawn "99%" )
                 ( FirstSpawn 0 )
-                ( Target "Shibalien Elite" ) :| []
+                ( Target "Shibalien Elite" )
+                ( EnemyCode 360 ) :| []
             ) :|
             [
                 ( Stage
@@ -80,7 +84,8 @@ spec = do
                 , Enemy
                     ( HpSpawn "100%" )
                     ( FirstSpawn 300 )
-                    ( Target "Shibalien Elite" ) :| []
+                    ( Target "Shibalien Elite" )
+                    ( EnemyCode 360 ) :| []
                 )
             ]
             ) :|
@@ -92,7 +97,8 @@ spec = do
                       , Enemy
                           ( HpSpawn "50%" )
                           ( FirstSpawn 0 )
-                          ( Target "Star Peng" ) :| []
+                          ( Target "Star Peng" )
+                          ( EnemyCode 361 ) :| []
                       ) :|
                     []
                 ,
@@ -103,13 +109,14 @@ spec = do
                     , Enemy
                         ( HpSpawn "100%" )
                         ( FirstSpawn 200 )
-                        ( Target "Cat God" ) :| []
+                        ( Target "Cat God" )
+                        ( EnemyCode 419 ) :| []
                     ) :| []
                 ]
 
-      let expected = (Stage (Level "CotC Ch.2") (StageName "The Big Bang") (Energy 110),Enemy (HpSpawn "100%") (FirstSpawn 300) (Target "Shibalien Elite") :| [
-                  Enemy (HpSpawn "50%") (FirstSpawn 0) (Target "Star Peng")
-                , Enemy (HpSpawn "100%") (FirstSpawn 200) (Target "Cat God")
+      let expected = (Stage (Level "CotC Ch.2") (StageName "The Big Bang") (Energy 110),Enemy (HpSpawn "100%") (FirstSpawn 300) (Target "Shibalien Elite") ( EnemyCode 360 ) :| [
+                  Enemy (HpSpawn "50%") (FirstSpawn 0) (Target "Star Peng") ( EnemyCode 361 )
+                , Enemy (HpSpawn "100%") (FirstSpawn 200) (Target "Cat God") ( EnemyCode 419 )
               ]) :| []
 
       let (MinEnergyStages stages) = findMinEnergy group
@@ -125,7 +132,8 @@ spec = do
             , Enemy
                 ( HpSpawn "100%" )
                 ( FirstSpawn 400 )
-                ( Target "Shibalien Elite" ) :| []
+                ( Target "Shibalien Elite" )
+                ( EnemyCode 360 ) :| []
             ) :|
             [
                 ( Stage
@@ -135,7 +143,8 @@ spec = do
                 , Enemy
                     ( HpSpawn "99%" )
                     ( FirstSpawn 0 )
-                    ( Target "Shibalien Elite" ) :| []
+                    ( Target "Shibalien Elite" )
+                    ( EnemyCode 360 ) :| []
                 )
             ,
                 ( Stage
@@ -145,7 +154,8 @@ spec = do
                 , Enemy
                     ( HpSpawn "99%" )
                     ( FirstSpawn 0 )
-                    ( Target "Shibalien Elite" ) :| []
+                    ( Target "Shibalien Elite" )
+                    ( EnemyCode 360 ) :| []
                 )
             ,
                 ( Stage
@@ -155,7 +165,8 @@ spec = do
                 , Enemy
                     ( HpSpawn "100%" )
                     ( FirstSpawn 500 )
-                    ( Target "Shibalien Elite" ) :| []
+                    ( Target "Shibalien Elite" )
+                    ( EnemyCode 360 ) :| []
                 )
             ,
                 ( Stage
@@ -165,7 +176,8 @@ spec = do
                 , Enemy
                     ( HpSpawn "99%" )
                     ( FirstSpawn 0 )
-                    ( Target "Shibalien Elite" ) :| []
+                    ( Target "Shibalien Elite" )
+                    ( EnemyCode 360 ) :| []
                 )
             ,
                 ( Stage
@@ -175,7 +187,8 @@ spec = do
                 , Enemy
                     ( HpSpawn "100%" )
                     ( FirstSpawn 900 )
-                    ( Target "Shibalien Elite" ) :| []
+                    ( Target "Shibalien Elite" )
+                    ( EnemyCode 360 ) :| []
                 )
             ,
                 ( Stage
@@ -185,7 +198,8 @@ spec = do
                 , Enemy
                     ( HpSpawn "100%" )
                     ( FirstSpawn 2 )
-                    ( Target "Shibalien Elite" ) :| []
+                    ( Target "Shibalien Elite" )
+                    ( EnemyCode 360 ) :| []
                 )
             ,
                 ( Stage
@@ -195,7 +209,8 @@ spec = do
                 , Enemy
                     ( HpSpawn "100%" )
                     ( FirstSpawn 1900 )
-                    ( Target "Shibalien Elite" ) :| []
+                    ( Target "Shibalien Elite" )
+                    ( EnemyCode 360 ) :| []
                 )
             ,
                 ( Stage
@@ -205,7 +220,8 @@ spec = do
                 , Enemy
                     ( HpSpawn "100%" )
                     ( FirstSpawn 1500 )
-                    ( Target "Shibalien Elite" ) :| []
+                    ( Target "Shibalien Elite" )
+                    ( EnemyCode 360 ) :| []
                 )
             ,
                 ( Stage
@@ -215,7 +231,8 @@ spec = do
                 , Enemy
                     ( HpSpawn "100%" )
                     ( FirstSpawn 500 )
-                    ( Target "Shibalien Elite" ) :| []
+                    ( Target "Shibalien Elite" )
+                    ( EnemyCode 360 ) :| []
                 )
             ,
                 ( Stage
@@ -225,7 +242,8 @@ spec = do
                 , Enemy
                     ( HpSpawn "100%" )
                     ( FirstSpawn 2000 )
-                    ( Target "Shibalien Elite" ) :| []
+                    ( Target "Shibalien Elite" )
+                    ( EnemyCode 360 ) :| []
                 )
             ,
                 ( Stage
@@ -235,7 +253,8 @@ spec = do
                 , Enemy
                     ( HpSpawn "100%" )
                     ( FirstSpawn 1000 )
-                    ( Target "Shibalien Elite" ) :| []
+                    ( Target "Shibalien Elite" )
+                    ( EnemyCode 360 ) :| []
                 )
             ,
                 ( Stage
@@ -245,7 +264,8 @@ spec = do
                 , Enemy
                     ( HpSpawn "99%" )
                     ( FirstSpawn 0 )
-                    ( Target "Shibalien Elite" ) :| []
+                    ( Target "Shibalien Elite" )
+                    ( EnemyCode 360 ) :| []
                 )
             ,
                 ( Stage
@@ -255,7 +275,8 @@ spec = do
                 , Enemy
                     ( HpSpawn "100%" )
                     ( FirstSpawn 2 )
-                    ( Target "Shibalien Elite" ) :| []
+                    ( Target "Shibalien Elite" )
+                    ( EnemyCode 360 ) :| []
                 )
             ,
                 ( Stage
@@ -265,7 +286,8 @@ spec = do
                 , Enemy
                     ( HpSpawn "100%" )
                     ( FirstSpawn 1200 )
-                    ( Target "Shibalien Elite" ) :| []
+                    ( Target "Shibalien Elite" )
+                    ( EnemyCode 360 ) :| []
                 )
             ,
                 ( Stage
@@ -275,7 +297,8 @@ spec = do
                 , Enemy
                     ( HpSpawn "99%" )
                     ( FirstSpawn 0 )
-                    ( Target "Shibalien Elite" ) :| []
+                    ( Target "Shibalien Elite" )
+                    ( EnemyCode 360 ) :| []
                 )
             ,
                 ( Stage
@@ -285,7 +308,8 @@ spec = do
                 , Enemy
                     ( HpSpawn "99%" )
                     ( FirstSpawn 2 )
-                    ( Target "Shibalien Elite" ) :| []
+                    ( Target "Shibalien Elite" )
+                    ( EnemyCode 360 ) :| []
                 )
             ,
                 ( Stage
@@ -295,7 +319,8 @@ spec = do
                 , Enemy
                     ( HpSpawn "100%" )
                     ( FirstSpawn 300 )
-                    ( Target "Shibalien Elite" ) :| []
+                    ( Target "Shibalien Elite" )
+                    ( EnemyCode 360 ) :| []
                 )
             ]
             ) :|
@@ -307,7 +332,8 @@ spec = do
                     , Enemy
                         ( HpSpawn "100%" )
                         ( FirstSpawn 800 )
-                        ( Target "Star Peng" ) :| []
+                        ( Target "Star Peng" )
+                         ( EnemyCode 361 ) :| []
                     ) :|
                     [
                         ( Stage
@@ -317,7 +343,8 @@ spec = do
                         , Enemy
                             ( HpSpawn "99%" )
                             ( FirstSpawn 0 )
-                            ( Target "Star Peng" ) :| []
+                            ( Target "Star Peng" )
+                            ( EnemyCode 361 ) :| []
                         )
                     ,
                         ( Stage
@@ -327,7 +354,8 @@ spec = do
                         , Enemy
                             ( HpSpawn "100%" )
                             ( FirstSpawn 1100 )
-                            ( Target "Star Peng" ) :| []
+                            ( Target "Star Peng" )
+                            ( EnemyCode 361 ) :| []
                         )
                     ,
                         ( Stage
@@ -337,7 +365,8 @@ spec = do
                         , Enemy
                             ( HpSpawn "100%" )
                             ( FirstSpawn 1100 )
-                            ( Target "Star Peng" ) :| []
+                            ( Target "Star Peng" )
+                            ( EnemyCode 361 ) :| []
                         )
                     ,
                         ( Stage
@@ -347,7 +376,8 @@ spec = do
                         , Enemy
                             ( HpSpawn "99%" )
                             ( FirstSpawn 0 )
-                            ( Target "Star Peng" ) :| []
+                            ( Target "Star Peng" )
+                            ( EnemyCode 361 ) :| []
                         )
                     ,
                         ( Stage
@@ -357,7 +387,8 @@ spec = do
                         , Enemy
                             ( HpSpawn "100%" )
                             ( FirstSpawn 1700 )
-                            ( Target "Star Peng" ) :| []
+                            ( Target "Star Peng" )
+                            ( EnemyCode 361 ) :| []
                         )
                     ,
                         ( Stage
@@ -367,7 +398,8 @@ spec = do
                         , Enemy
                             ( HpSpawn "100%" )
                             ( FirstSpawn 2400 )
-                            ( Target "Star Peng" ) :| []
+                            ( Target "Star Peng" )
+                            ( EnemyCode 361 ) :| []
                         )
                     ,
                         ( Stage
@@ -377,7 +409,8 @@ spec = do
                         , Enemy
                             ( HpSpawn "100%" )
                             ( FirstSpawn 900 )
-                            ( Target "Star Peng" ) :| []
+                            ( Target "Star Peng" )
+                            ( EnemyCode 361 ) :| []
                         )
                     ,
                         ( Stage
@@ -387,7 +420,8 @@ spec = do
                         , Enemy
                             ( HpSpawn "100%" )
                             ( FirstSpawn 600 )
-                            ( Target "Star Peng" ) :| []
+                            ( Target "Star Peng" )
+                            ( EnemyCode 361 ) :| []
                         )
                     ,
                         ( Stage
@@ -397,7 +431,8 @@ spec = do
                         , Enemy
                             ( HpSpawn "100%" )
                             ( FirstSpawn 1600 )
-                            ( Target "Star Peng" ) :| []
+                            ( Target "Star Peng" )
+                            ( EnemyCode 361 ) :| []
                         )
                     ,
                         ( Stage
@@ -407,7 +442,8 @@ spec = do
                         , Enemy
                             ( HpSpawn "100%" )
                             ( FirstSpawn 1300 )
-                            ( Target "Star Peng" ) :| []
+                            ( Target "Star Peng" )
+                            ( EnemyCode 361 ) :| []
                         )
                     ,
                         ( Stage
@@ -417,7 +453,8 @@ spec = do
                         , Enemy
                             ( HpSpawn "99%" )
                             ( FirstSpawn 0 )
-                            ( Target "Star Peng" ) :| []
+                            ( Target "Star Peng" )
+                            ( EnemyCode 361 ) :| []
                         )
                     ,
                         ( Stage
@@ -427,7 +464,8 @@ spec = do
                         , Enemy
                             ( HpSpawn "99%" )
                             ( FirstSpawn 2 )
-                            ( Target "Star Peng" ) :| []
+                            ( Target "Star Peng" )
+                            ( EnemyCode 361 ) :| []
                         )
                     ,
                         ( Stage
@@ -437,7 +475,8 @@ spec = do
                         , Enemy
                             ( HpSpawn "100%" )
                             ( FirstSpawn 500 )
-                            ( Target "Star Peng" ) :| []
+                            ( Target "Star Peng" )
+                            ( EnemyCode 361 ) :| []
                         )
                     ,
                         ( Stage
@@ -447,7 +486,8 @@ spec = do
                         , Enemy
                             ( HpSpawn "99%" )
                             ( FirstSpawn 0 )
-                            ( Target "Star Peng" ) :| []
+                            ( Target "Star Peng" )
+                            ( EnemyCode 361 ) :| []
                         )
                     ,
                         ( Stage
@@ -457,7 +497,8 @@ spec = do
                         , Enemy
                             ( HpSpawn "99%" )
                             ( FirstSpawn 0 )
-                            ( Target "Star Peng" ) :| []
+                            ( Target "Star Peng" )
+                            ( EnemyCode 361 ) :| []
                         )
                     ,
                         ( Stage
@@ -467,7 +508,8 @@ spec = do
                         , Enemy
                             ( HpSpawn "100%" )
                             ( FirstSpawn 1000 )
-                            ( Target "Star Peng" ) :| []
+                            ( Target "Star Peng" )
+                            ( EnemyCode 361 ) :| []
                         )
                     ,
                         ( Stage
@@ -477,7 +519,8 @@ spec = do
                         , Enemy
                             ( HpSpawn "50%" )
                             ( FirstSpawn 0 )
-                            ( Target "Star Peng" ) :| []
+                            ( Target "Star Peng" )
+                            ( EnemyCode 361 ) :| []
                         )
                     ]
                 ,
@@ -488,13 +531,14 @@ spec = do
                     , Enemy
                         ( HpSpawn "100%" )
                         ( FirstSpawn 200 )
-                        ( Target "Cat God" ) :| []
+                        ( Target "Cat God" )
+                        ( EnemyCode 419 ) :| []
                     ) :| []
                 ]
 
-      let expected = (Stage (Level "CotC Ch.2") (StageName "The Big Bang") (Energy 110),Enemy (HpSpawn "100%") (FirstSpawn 300) (Target "Shibalien Elite") :| [
-                  Enemy (HpSpawn "50%") (FirstSpawn 0) (Target "Star Peng")
-                , Enemy (HpSpawn "100%") (FirstSpawn 200) (Target "Cat God")
+      let expected = (Stage (Level "CotC Ch.2") (StageName "The Big Bang") (Energy 110),Enemy (HpSpawn "100%") (FirstSpawn 300) (Target "Shibalien Elite") ( EnemyCode 360 ) :| [
+                  Enemy (HpSpawn "50%") (FirstSpawn 0) (Target "Star Peng") ( EnemyCode 361 )
+                , Enemy (HpSpawn "100%") (FirstSpawn 200) (Target "Cat God") ( EnemyCode 419 )
               ]) :| []
 
       let (MinEnergyStages stages) = findMinEnergy group

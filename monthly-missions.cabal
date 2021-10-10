@@ -18,10 +18,13 @@ library
   exposed-modules:     BattleCats.MonthlyMissions.Types
                      , BattleCats.MonthlyMissions.Lib
                      , Data.List.NonEmpty.Utils
+                     , BattleCats.Image
   ghc-options:         -Wall
   build-depends:       base >= 4.7 && < 5
                      , text
                      , sqlite-simple
+                     , bytestring
+                     , base64
   default-language:    Haskell2010
 
 executable monthly-missions
@@ -33,11 +36,13 @@ executable monthly-missions
                      , text
                      , sqlite-simple
                      , pretty-simple
+                     , bytestring
   default-language:    Haskell2010
 
 test-suite monthly-missions-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
+  other-modules:       BattleCats.MonthlyMissions.LibSpec
   main-is:             Spec.hs
   build-depends:       base
                      , monthly-missions

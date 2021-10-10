@@ -33,6 +33,7 @@ instance FromRow FromRowStage where
   fromRow = FromRowStage <$> field <*> field <*> field <*> field <*> field
 
 newtype EnemyCode = EnemyCode Int
+  deriving (Show, Eq)
 
 newtype Level = Level T.Text
     deriving (Show, FromField, Eq, IsString, ToField, Ord)
@@ -54,16 +55,16 @@ data Mission = Mission Location Target
 
 newtype EnemyUnitsTSV = EnemyUnitsTSV T.Text
 
-data Enemy = Enemy HpSpawn FirstSpawn Target
+data Enemy = Enemy HpSpawn FirstSpawn Target EnemyCode
   deriving (Show, Eq)
 
 newtype FastestEnemy = FastestEnemy Enemy
 
 instance Eq FastestEnemy where
-  FastestEnemy (Enemy _ firstSpawnA _) == FastestEnemy (Enemy _ firstSpawnB _) = firstSpawnA == firstSpawnB
+  FastestEnemy (Enemy _ firstSpawnA _ _) == FastestEnemy (Enemy _ firstSpawnB _ _) = firstSpawnA == firstSpawnB
 
 instance Ord FastestEnemy where
-  FastestEnemy (Enemy _ firstSpawnA _) <= FastestEnemy (Enemy _ firstSpawnB _) = firstSpawnA <= firstSpawnB
+  FastestEnemy (Enemy _ firstSpawnA _ _) <= FastestEnemy (Enemy _ firstSpawnB _ _) = firstSpawnA <= firstSpawnB
 
 data Stage = Stage Level StageName Energy
   deriving (Show, Eq, Ord)
