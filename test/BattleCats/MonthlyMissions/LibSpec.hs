@@ -17,9 +17,40 @@ spec :: Spec
 spec = do
   describe "findMinEnergy" $ do
     it "1 group" $ do
-      let group = ((Stage (Level "CotC Ch.2") (StageName "The Big Bang") (Energy 110),Enemy (HpSpawn "100%") (FirstSpawn 300) (Target "Shibalien Elite") :| []) :|
-            [(Stage (Level "CotC Ch.2") (StageName "The Big Bang") (Energy 110),Enemy (HpSpawn "50%") (FirstSpawn 0) (Target "Star Peng") :| []),
-            (Stage (Level "CotC Ch.2") (StageName "The Big Bang") (Energy 110),Enemy (HpSpawn "100%") (FirstSpawn 200) (Target "Cat God") :| [])]) :| []
+      let group = (
+            ( Stage
+                  ( Level "CotC Ch.2" )
+                  ( StageName "The Big Bang" )
+                  ( Energy 110 )
+              , Enemy
+                  ( HpSpawn "100%" )
+                  ( FirstSpawn 300 )
+                  ( Target "Shibalien Elite" ) :| []
+              ) :|
+            []
+            ) :|
+                [
+                    ( Stage
+                            ( Level "CotC Ch.2" )
+                            ( StageName "The Big Bang" )
+                            ( Energy 110 )
+                      , Enemy
+                          ( HpSpawn "50%" )
+                          ( FirstSpawn 0 )
+                          ( Target "Star Peng" ) :| []
+                      ) :|
+                    []
+                ,
+                    ( Stage
+                        ( Level "CotC Ch.2" )
+                        ( StageName "The Big Bang" )
+                        ( Energy 110 )
+                    , Enemy
+                        ( HpSpawn "100%" )
+                        ( FirstSpawn 200 )
+                        ( Target "Cat God" ) :| []
+                    ) :| []
+                ]
 
       let expected = (Stage (Level "CotC Ch.2") (StageName "The Big Bang") (Energy 110),Enemy (HpSpawn "100%") (FirstSpawn 300) (Target "Shibalien Elite") :| [
                   Enemy (HpSpawn "50%") (FirstSpawn 0) (Target "Star Peng")
@@ -85,7 +116,7 @@ spec = do
 
       stages `shouldBe` expected
 
-    it "multiple groups" $ do
+    it "real world groups" $ do
       let group = (
             ( Stage
                 ( Level "CotC Ch.2" )
