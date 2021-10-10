@@ -19,6 +19,7 @@ library
                      , BattleCats.MonthlyMissions.Lib
                      , Data.List.NonEmpty.Utils
                      , BattleCats.Image
+                     , ITerm2.ANSI.Image
   ghc-options:         -Wall
   build-depends:       base >= 4.7 && < 5
                      , text

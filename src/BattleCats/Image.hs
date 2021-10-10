@@ -2,15 +2,13 @@
 module BattleCats.Image where
 import           BattleCats.MonthlyMissions.Types
 import qualified Data.ByteString                  as BS
-import           Data.ByteString.Base64
+import qualified ITerm2.ANSI.Image                as I
 
-getImage :: EnemyCode -> IO BS.ByteString
-getImage (EnemyCode code) = do
+terminalImage :: EnemyCode -> IO ()
+terminalImage (EnemyCode code) = do
     imgdata <- BS.readFile $ "./data/enemy/enemy_icon_" <> padLeft '0' 3 (show code) <> ".png"
 
-    let b64 = encodeBase64' imgdata
-
-    return $ "\ESC]1337;File=inline=1:" <> b64 <> "\0007\n"
+    I.print imgdata
 
 {-# INLINE padLeft #-}
 padLeft :: a -> Int -> [a] -> [a]

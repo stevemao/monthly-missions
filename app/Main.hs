@@ -4,13 +4,13 @@ module Main where
 import           BattleCats.Image
 import           BattleCats.MonthlyMissions.Lib
 import           BattleCats.MonthlyMissions.Types
-import qualified Data.ByteString                  as BS
+import qualified Data.ByteString                   as BS
 import           Data.Foldable
-import           Data.List.NonEmpty               (NonEmpty ((:|)))
-import qualified Data.Text.IO                     as TIO
+import           Data.List.NonEmpty                (NonEmpty ((:|)))
+import qualified Data.Text.IO                      as TIO
 import           Database.SQLite.Simple
 import           Text.Pretty.Simple
-import Text.Pretty.Simple.Internal.Color
+import           Text.Pretty.Simple.Internal.Color
 
 eocCh2, eocCh3, itfCh1, itfCh2, sol, cotcCh1, cotcCh2, cotcCh3 :: Location
 eocCh2 = LocationLevel "EoC Ch.2"
@@ -24,9 +24,8 @@ cotcCh3 = LocationLevel "CotC Ch.3"
 
 main :: IO ()
 main = do
-  let missions = Mission cotcCh3 (Target "Bore") :|
-               [ Mission cotcCh3 (Target "Alpacky")
-               , Mission sol (Target "Hackey") ]
+  let missions = Mission sol (Target "Owlbrow") :|
+               [ Mission sol (Target "St. Pigge the 2nd") ]
 
   enemyunits <- TIO.readFile "./data/enemyunits.tsv"
 
@@ -45,7 +44,7 @@ main = do
 
       traverse (\enemy@(Enemy _ _ _ code) -> do
             pPrintOpt CheckColorTty defaultOutputOptionsDarkBg { outputOptionsInitialIndent = 4
-                                                               , outputOptionsColorOptions = Just (defaultColorOptionsDarkBg { 
+                                                               , outputOptionsColorOptions = Just (defaultColorOptionsDarkBg {
                                                                     colorRainbowParens = [ colorBold Vivid Cyan
                                                                                          , colorBold Vivid Yellow
                                                                                          , color Dull Magenta
@@ -58,9 +57,10 @@ main = do
                                                                                          , color Vivid Cyan
                                                                                          , color Vivid Yellow
                                                                                          , colorBold Vivid Magenta ] }) } enemy
-            image <- getImage code
+
             BS.putStr "         "
-            BS.putStr image
+            terminalImage code
+            BS.putStr "\n"
         ) enemies
       ) stages
 
