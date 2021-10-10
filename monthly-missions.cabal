@@ -1,14 +1,14 @@
 name:                monthly-missions
 version:             0.1.0.0
--- synopsis:
--- description:
-homepage:            https://github.com/githubuser/monthly-missions#readme
+synopsis:            Find the most energy efficient stages
+description:         Manually find the stages that contain the targets is very annoying
+homepage:            https://github.com/stevemao/monthly-missions#readme
 license:             BSD3
 license-file:        LICENSE
-author:              Author name here
+author:              Steve Mao
 maintainer:          example@example.com
-copyright:           2021 Author name here
-category:            Web
+copyright:           2021 Steve Mao
+category:            Battle Cats tool
 build-type:          Simple
 extra-source-files:  README.md
 cabal-version:       >=1.10
@@ -53,4 +53,4 @@ test-suite monthly-missions-test
 
 source-repository head
   type:     git
-  location: https://github.com/githubuser/monthly-missions
+  location: https://github.com/stevemao/monthly-missions

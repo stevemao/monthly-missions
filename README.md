@@ -1,5 +1,7 @@
 # monthly-missions
 
+> Find the most energy efficient stages
+
 ## How to use this tool
 
 ### Clone this repo
