@@ -20,9 +20,9 @@ cotcCh3 = LocationLevel "CotC Ch.3"
 
 main :: IO ()
 main = do
-  let missions = Mission sol (Target "Lord Gravey") :|
-                 [ Mission sol (Target "Hackey")
-                 , Mission sol (Target "Zomboe") ]
+  let missions = Mission cotcCh2 (Target "Shibalien Elite") :|
+                 [ Mission cotcCh2 (Target "Star Peng")
+                 , Mission cotcCh2 (Target "Cat God") ]
 
   enemyunits <- TIO.readFile "./data/enemyunits.tsv"
 
