@@ -17,6 +17,7 @@ library
   hs-source-dirs:      src
   exposed-modules:     BattleCats.MonthlyMissions.Types
                      , BattleCats.MonthlyMissions.Lib
+                     , Data.List.NonEmpty.Utils
   ghc-options:         -Wall
   build-depends:       base >= 4.7 && < 5
                      , text
