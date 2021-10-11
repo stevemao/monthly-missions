@@ -11,6 +11,7 @@ import           Data.List.NonEmpty.Utils
 import qualified Data.Text                        as T
 import qualified Data.Text.IO                     as TIO
 import           Database.SQLite.Simple
+import           System.Directory
 
 getCode :: EnemyUnitsTSV -> Target -> IO EnemyCode
 getCode (EnemyUnitsTSV enemyunits) t@(Target target) = do
@@ -75,11 +76,13 @@ combineEnemies newEnemies Nothing        = newEnemies
 
 getMinStages :: NonEmpty Mission -> IO MinEnergyStages
 getMinStages missions = do
-  enemyunits <- TIO.readFile "./data/enemyunits.tsv"
+  enemyunitsPath <- getXdgDirectory XdgData "./monthly-missions/data/enemyunits.tsv"
+  enemyunits <- TIO.readFile enemyunitsPath
 
   let eu = EnemyUnitsTSV enemyunits
 
-  conn <- open "./data/stages10.2.db"
+  dbPath <- getXdgDirectory XdgData "./monthly-missions/data/stages10.2.db"
+  conn <- open dbPath
 
   stagess <- traverse (getStages conn eu) missions
 
