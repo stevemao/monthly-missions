@@ -1,7 +1,9 @@
 name:                monthly-missions
 version:             0.1.0.0
 synopsis:            Find the most energy efficient stages
-description:         Manually find the stages that contain the targets is very annoying
+description:         Manually find the stages that contain the enemies can be a very time consuming task
+                     This tool can find your enemies very quickly
+                     You might even find multiple enemies in one stage
 homepage:            https://github.com/stevemao/monthly-missions#readme
 license:             BSD3
 license-file:        LICENSE
@@ -30,12 +32,15 @@ library
 
 executable monthly-missions
   hs-source-dirs:      app
+  other-modules:       Paths_monthly_missions
   main-is:             Main.hs
   ghc-options:         -Wall -threaded -rtsopts -with-rtsopts=-N
   build-depends:       base
                      , monthly-missions
                      , pretty-simple
                      , bytestring
+                     , cmdargs
+                     , text
   default-language:    Haskell2010
 
 test-suite monthly-missions-test
