@@ -16,7 +16,7 @@ getCode :: EnemyUnitsTSV -> Target -> IO EnemyCode
 getCode (EnemyUnitsTSV enemyunits) t@(Target target) = do
   let maybeIdx = subtract 1 <$> findIndex (("\t" <> target <> "\t") `T.isInfixOf`) (T.lines enemyunits)
 
-  maybe (throwIO (error $ "could not find " <> show t :: SomeException)) (return . EnemyCode) maybeIdx
+  maybe (throwIO (errorWithoutStackTrace $ "could not find " <> show t :: SomeException)) (return . EnemyCode) maybeIdx
 
 getStages :: Connection -> EnemyUnitsTSV -> Mission -> IO (NonEmpty StageWithEnemy)
 getStages conn enemyunits m@(Mission location target) = do
@@ -46,7 +46,7 @@ getStages conn enemyunits m@(Mission location target) = do
                             queryNamed conn "SELECT level, stage, energy, u.hpspawn, u.firstspawn from stages s JOIN units u ON u.stageid = s.stageid WHERE u.enemycode = :enemycode AND category = :category"
                                            [":enemycode" := enemycode, ":category" := category]
     case nonEmpty stages of
-        Nothing -> throwIO (error $ "could not find " <> show m :: SomeException)
+        Nothing -> throwIO (errorWithoutStackTrace $ "could not find " <> show m :: SomeException)
         Just nonEmptyStages -> do
           let fromRowStage = groupBy1
                               (\(FromRowStage levelA nameA energyA _ _) (FromRowStage levelB nameB energyB _ _) ->

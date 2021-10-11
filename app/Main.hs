@@ -35,11 +35,12 @@ data Missions
 
 input :: Missions
 input = Missions (def &= args &= typ "location target...") &= program "monthly-missions" &=
-           help "Find the most energy efficient stages for your monthly missions" &=
+           help "Find the most energy efficient stages for your monthly challenges" &=
            summary ("monthly-missions " <> showVersion version <> ", (C) Steve Mao") &=
            details ["Examples:"
                    , "  monthly-missions cotcCh2 'Cat God' cotcCh2 'Shibalien Elite'"
                    , "  monthly-missions sol 'Shibalien Elite' sol 'Star Peng'", ""
+                   , "Possible locations: eocCh2, eocCh3, itfCh1, itfCh2, cotcCh1, cotcCh2, cotcCh3, sol", ""
                    , "Manually find the stages that contain the enemies can be a very time consuming task",""
                    ,"This tool can find your enemies very quickly","  You might even find multiple enemies in one stage"
                    ]
@@ -67,7 +68,7 @@ main = do
   let ms = (\(l, e) -> Mission (fromString l) (Target e)) <$> pairs (m as)
 
   case nonEmpty ms of
-    Nothing -> throwIO (error "You must specify at least one location and enemy. try monthly-missions cotcCh2 'Cat God' cotcCh2 'Shibalien Elite'" :: SomeException)
+    Nothing -> throwIO (errorWithoutStackTrace "You must specify at least one location and enemy. try monthly-missions cotcCh2 'Cat God' cotcCh2 'Shibalien Elite'" :: SomeException)
     Just missions -> do
       MinEnergyStages stages <- getMinStages missions
 

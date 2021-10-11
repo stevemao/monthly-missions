@@ -1,10 +1,12 @@
 # monthly-missions
 
-> Find the most energy efficient stages for your monthly missions
+> Find the most energy efficient stages for your monthly challenges
 
 Manually find the stages that contain the enemies can be a very time consuming task
 This tool can find your enemies very quickly
 You might even find multiple enemies in one stage
+Also prints an enemy icon if you don't know the names
+It shows when enemy will appear to avoid clearing the stage too quickly
 
 ## How to use this tool
 

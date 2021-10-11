@@ -1,9 +1,11 @@
 name:                monthly-missions
 version:             0.1.0.0
-synopsis:            Find the most energy efficient stages
+synopsis:            Find the most energy efficient stages for your monthly challenges
 description:         Manually find the stages that contain the enemies can be a very time consuming task
                      This tool can find your enemies very quickly
                      You might even find multiple enemies in one stage
+                     Also prints an enemy icon if you don't know the names
+                     It shows when enemy will appear to avoid clearing the stage too quickly
 homepage:            https://github.com/stevemao/monthly-missions#readme
 license:             BSD3
 license-file:        LICENSE
