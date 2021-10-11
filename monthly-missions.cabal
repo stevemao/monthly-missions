@@ -34,8 +34,6 @@ executable monthly-missions
   ghc-options:         -Wall -threaded -rtsopts -with-rtsopts=-N
   build-depends:       base
                      , monthly-missions
-                     , text
-                     , sqlite-simple
                      , pretty-simple
                      , bytestring
   default-language:    Haskell2010

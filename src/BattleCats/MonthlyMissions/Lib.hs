@@ -9,8 +9,7 @@ import           Data.List.NonEmpty               (NonEmpty ((:|)), groupBy1,
                                                    nonEmpty)
 import           Data.List.NonEmpty.Utils
 import qualified Data.Text                        as T
-import           Database.SQLite.Simple
-import qualified Data.Text.IO                      as TIO
+import qualified Data.Text.IO                     as TIO
 import           Database.SQLite.Simple
 
 getCode :: EnemyUnitsTSV -> Target -> IO EnemyCode
