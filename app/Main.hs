@@ -33,20 +33,21 @@ main = do
       pPrint stage
 
       traverse (\enemy@(Enemy _ _ _ code) -> do
-            pPrintOpt CheckColorTty defaultOutputOptionsDarkBg { outputOptionsInitialIndent = 4
-                                                               , outputOptionsColorOptions = Just (defaultColorOptionsDarkBg {
-                                                                    colorRainbowParens = [ colorBold Vivid Cyan
-                                                                                         , colorBold Vivid Yellow
-                                                                                         , color Dull Magenta
-                                                                                         , color Dull Cyan
-                                                                                         , color Dull Yellow
-                                                                                         , colorBold Dull Magenta
-                                                                                         , colorBold Dull Cyan
-                                                                                         , colorBold Dull Yellow
-                                                                                         , color Vivid Magenta
-                                                                                         , color Vivid Cyan
-                                                                                         , color Vivid Yellow
-                                                                                         , colorBold Vivid Magenta ] }) } enemy
+            pPrintOpt CheckColorTty defaultOutputOptionsDarkBg
+              { outputOptionsInitialIndent = 4
+              , outputOptionsColorOptions = Just (defaultColorOptionsDarkBg
+               { colorRainbowParens = [ colorBold Vivid Cyan
+                                      , colorBold Vivid Yellow
+                                      , color Dull Magenta
+                                      , color Dull Cyan
+                                      , color Dull Yellow
+                                      , colorBold Dull Magenta
+                                      , colorBold Dull Cyan
+                                      , colorBold Dull Yellow
+                                      , color Vivid Magenta
+                                      , color Vivid Cyan
+                                      , color Vivid Yellow
+                                      , colorBold Vivid Magenta ] }) } enemy
 
             BS.putStr "         "
             terminalImage code
