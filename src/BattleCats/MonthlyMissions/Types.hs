@@ -8,66 +8,84 @@ import           Database.SQLite.Simple.FromField
 import           Database.SQLite.Simple.ToField
 import           GHC.Exts                         (IsString (..))
 
-newtype StageName = StageName T.Text
-    deriving (Show, FromField, Eq, Ord)
+newtype StageName
+  = StageName T.Text
+  deriving (Eq, FromField, Ord, Show)
 
 instance FromRow StageName where
   fromRow = StageName <$> field
 
-newtype Energy = Energy Int
-    deriving (Show, FromField, Eq, Num, Ord)
+newtype Energy
+  = Energy Int
+  deriving (Eq, FromField, Num, Ord, Show)
 
 instance FromRow Energy where
   fromRow = Energy <$> field
 
-newtype HpSpawn = HpSpawn T.Text
-  deriving (Show, FromField, Eq)
+newtype HpSpawn
+  = HpSpawn T.Text
+  deriving (Eq, FromField, Show)
 
-newtype FirstSpawn = FirstSpawn Int
-  deriving (Show, FromField, Eq, Ord)
+newtype FirstSpawn
+  = FirstSpawn Int
+  deriving (Eq, FromField, Ord, Show)
 
-data FromRowStage = FromRowStage Level StageName Energy HpSpawn FirstSpawn
-    deriving (Show)
+data FromRowStage
+  = FromRowStage Level StageName Energy HpSpawn FirstSpawn
+  deriving (Show)
 
 instance FromRow FromRowStage where
   fromRow = FromRowStage <$> field <*> field <*> field <*> field <*> field
 
-newtype EnemyCode = EnemyCode Int
-  deriving (Show, Eq)
+newtype EnemyCode
+  = EnemyCode Int
+  deriving (Eq, Show)
 
-newtype Level = Level T.Text
-    deriving (Show, FromField, Eq, IsString, ToField, Ord)
+newtype Level
+  = Level T.Text
+  deriving (Eq, FromField, IsString, Ord, Show, ToField)
 
 instance FromRow Level where
   fromRow = Level <$> field
 
-newtype Target = Target T.Text
-    deriving (Show, Eq)
+newtype Target
+  = Target T.Text
+  deriving (Eq, Show)
 
-newtype Category = Category T.Text
-    deriving (Show, IsString, ToField)
+newtype Category
+  = Category T.Text
+  deriving (IsString, Show, ToField)
 
-data Location = LocationLevel Level | LocationCategory Category
-    deriving Show
+data Location
+  = LocationLevel Level
+  | LocationCategory Category
+  deriving (Show)
 
-data Mission = Mission Location Target
-    deriving Show
+data Mission
+  = Mission Location Target
+  deriving (Show)
 
-newtype EnemyUnitsTSV = EnemyUnitsTSV T.Text
+newtype EnemyUnitsTSV
+  = EnemyUnitsTSV T.Text
 
-data Enemy = Enemy HpSpawn FirstSpawn Target EnemyCode
-  deriving (Show, Eq)
+data Enemy
+  = Enemy HpSpawn FirstSpawn Target EnemyCode
+  deriving (Eq, Show)
 
-newtype FastestEnemy = FastestEnemy Enemy
+newtype FastestEnemy
+  = FastestEnemy Enemy
 
 instance Eq FastestEnemy where
-  FastestEnemy (Enemy _ firstSpawnA _ _) == FastestEnemy (Enemy _ firstSpawnB _ _) = firstSpawnA == firstSpawnB
+  FastestEnemy (Enemy _ firstSpawnA _ _) == FastestEnemy (Enemy _ firstSpawnB _ _) =
+      firstSpawnA == firstSpawnB
 
 instance Ord FastestEnemy where
-  FastestEnemy (Enemy _ firstSpawnA _ _) <= FastestEnemy (Enemy _ firstSpawnB _ _) = firstSpawnA <= firstSpawnB
+  FastestEnemy (Enemy _ firstSpawnA _ _) <= FastestEnemy (Enemy _ firstSpawnB _ _) =
+      firstSpawnA <= firstSpawnB
 
-data Stage = Stage Level StageName Energy
-  deriving (Show, Eq, Ord)
+data Stage
+  = Stage Level StageName Energy
+  deriving (Eq, Ord, Show)
 
 getEnergy :: NonEmpty Stage -> Energy
 getEnergy = foldr (\(Stage _ _ e) -> (e +)) 0
@@ -77,11 +95,14 @@ getEnergy' stages = getEnergy (fst <$> stages)
 
 type StageWithEnemy = (Stage, NonEmpty Enemy)
 
-newtype MinEnergyStages = MinEnergyStages (NonEmpty StageWithEnemy)
+newtype MinEnergyStages
+  = MinEnergyStages (NonEmpty StageWithEnemy)
   deriving (Show)
 
 instance Eq MinEnergyStages where
-  MinEnergyStages stagesA == MinEnergyStages stagesB = getEnergy' stagesA == getEnergy' stagesB
+  MinEnergyStages stagesA == MinEnergyStages stagesB =
+      getEnergy' stagesA == getEnergy' stagesB
 
 instance Ord MinEnergyStages where
-  MinEnergyStages stagesA <= MinEnergyStages stagesB = getEnergy' stagesA <= getEnergy' stagesB
+  MinEnergyStages stagesA <= MinEnergyStages stagesB =
+      getEnergy' stagesA <= getEnergy' stagesB

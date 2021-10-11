@@ -4,6 +4,7 @@ module Main where
 import           BattleCats.Image
 import           BattleCats.MonthlyMissions.Lib
 import           BattleCats.MonthlyMissions.Types
+import           Control.Monad.IO.Class
 import qualified Data.ByteString                   as BS
 import           Data.Foldable
 import           Data.List.NonEmpty                (NonEmpty ((:|)))
@@ -33,24 +34,27 @@ main = do
       pPrint stage
 
       traverse (\enemy@(Enemy _ _ _ code) -> do
-            pPrintOpt CheckColorTty defaultOutputOptionsDarkBg
-              { outputOptionsInitialIndent = 4
-              , outputOptionsColorOptions = Just (defaultColorOptionsDarkBg
-               { colorRainbowParens = [ colorBold Vivid Cyan
-                                      , colorBold Vivid Yellow
-                                      , color Dull Magenta
-                                      , color Dull Cyan
-                                      , color Dull Yellow
-                                      , colorBold Dull Magenta
-                                      , colorBold Dull Cyan
-                                      , colorBold Dull Yellow
-                                      , color Vivid Magenta
-                                      , color Vivid Cyan
-                                      , color Vivid Yellow
-                                      , colorBold Vivid Magenta ] }) } enemy
+            pPrintIndented enemy
 
             BS.putStr "         "
             terminalImage code
             BS.putStr "\n"
         ) enemies
       ) stages
+
+pPrintIndented :: (MonadIO m, Show a) => a -> m ()
+pPrintIndented = pPrintOpt CheckColorTty defaultOutputOptionsDarkBg
+              { outputOptionsInitialIndent = 4
+              , outputOptionsColorOptions = Just (defaultColorOptionsDarkBg
+                      { colorRainbowParens = [ colorBold Vivid Cyan
+                                             , colorBold Vivid Yellow
+                                             , color Dull Magenta
+                                             , color Dull Cyan
+                                             , color Dull Yellow
+                                             , colorBold Dull Magenta
+                                             , colorBold Dull Cyan
+                                             , colorBold Dull Yellow
+                                             , color Vivid Magenta
+                                             , color Vivid Cyan
+                                             , color Vivid Yellow
+                                             , colorBold Vivid Magenta ] }) }

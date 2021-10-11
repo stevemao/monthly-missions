@@ -35,17 +35,23 @@ getStages conn enemyunits m@(Mission location target) = do
 
                             let extraQuery = foldr (\i acc -> " AND stage != :excludedStage" <> (Query . T.pack . show $ i) <> acc) "" excludedStagesIndex
 
-                            let extraParam = (\(s, i) -> (":excludedStage" <> (T.pack . show $ i)) := s) <$> excludedStagesWithIndex
+                            let extraParams = (\(s, i) -> (":excludedStage" <> (T.pack . show $ i)) := s) <$> excludedStagesWithIndex
 
-                            stages <- queryNamed conn ("SELECT level, stage, energy, u.hpspawn, u.firstspawn from stages s JOIN units u ON u.stageid = s.stageid WHERE u.enemycode = :enemycode AND level = :level" <> extraQuery) ([":enemycode" := enemycode, ":level" := level'] <> extraParam)
+                            stages <- queryNamed conn ("SELECT level, stage, energy, u.hpspawn, u.firstspawn from stages s JOIN units u ON u.stageid = s.stageid WHERE u.enemycode = :enemycode AND level = :level"
+                                                    <> extraQuery)
+                                                    ([":enemycode" := enemycode, ":level" := level'] <> extraParams)
 
                             return $ (\(FromRowStage _ n e h f) -> FromRowStage level n (e + energyAdjustment) h f) <$> stages
       LocationCategory category -> do
-                            queryNamed conn "SELECT level, stage, energy, u.hpspawn, u.firstspawn from stages s JOIN units u ON u.stageid = s.stageid WHERE u.enemycode = :enemycode AND category = :category" [":enemycode" := enemycode, ":category" := category]
+                            queryNamed conn "SELECT level, stage, energy, u.hpspawn, u.firstspawn from stages s JOIN units u ON u.stageid = s.stageid WHERE u.enemycode = :enemycode AND category = :category"
+                                           [":enemycode" := enemycode, ":category" := category]
     case nonEmpty stages of
         Nothing -> throwIO (error $ "could not find " <> show m :: SomeException)
         Just nonEmptyStages -> do
-          let fromRowStage = groupBy1 (\(FromRowStage levelA nameA energyA _ _) (FromRowStage levelB nameB energyB _ _) -> Stage levelA nameA energyA == Stage levelB nameB energyB) nonEmptyStages
+          let fromRowStage = groupBy1
+                              (\(FromRowStage levelA nameA energyA _ _) (FromRowStage levelB nameB energyB _ _) ->
+                                        Stage levelA nameA energyA == Stage levelB nameB energyB)
+                              nonEmptyStages
 
           return $ findFastestEnemy target code <$> fromRowStage
 

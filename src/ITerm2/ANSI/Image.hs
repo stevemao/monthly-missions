@@ -4,11 +4,18 @@ import qualified Data.ByteString        as BS
 import           Data.ByteString.Base64
 import           Data.ByteString.Char8
 
-data Size = Cells Int | Pixels Int | Percent Int | Auto
+data Size
+  = Cells Int
+  | Pixels Int
+  | Percent Int
+  | Auto
 
-data Options = Options { width               :: Size
-                       , height              :: Size
-                       , preserveAspectRatio :: Bool }
+data Options
+  = Options
+      { width               :: Size
+      , height              :: Size
+      , preserveAspectRatio :: Bool
+      }
 
 defaultOptions :: Options
 defaultOptions = Options Auto Auto True
@@ -20,7 +27,16 @@ fromSize (Percent p) = pack (show p) <> "%"
 fromSize Auto        = "auto"
 
 image :: Options -> BS.ByteString -> BS.ByteString
-image opts imgdata = "\ESC]1337;File=inline=1" <> ";width=" <> w <> ";height=" <> h <> ";preserveAspectRatio=" <> p <> ":" <> b64 <> "\0007"
+image opts imgdata = "\ESC]1337;File=inline=1"
+                  <> ";width="
+                  <> w
+                  <> ";height="
+                  <> h
+                  <> ";preserveAspectRatio="
+                  <> p
+                  <> ":"
+                  <> b64
+                  <> "\0007"
         where b64 = encodeBase64' imgdata
               w = fromSize (width opts)
               h = fromSize (height opts)
