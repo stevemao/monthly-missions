@@ -10,6 +10,8 @@ import           Data.List.NonEmpty               (NonEmpty ((:|)), groupBy1,
 import           Data.List.NonEmpty.Utils
 import qualified Data.Text                        as T
 import           Database.SQLite.Simple
+import qualified Data.Text.IO                      as TIO
+import           Database.SQLite.Simple
 
 getCode :: EnemyUnitsTSV -> Target -> IO EnemyCode
 getCode (EnemyUnitsTSV enemyunits) t@(Target target) = do
@@ -65,3 +67,17 @@ updateEnemies (stage, enemies) = upsertList (combineEnemies enemies) stage
 combineEnemies :: NonEmpty Enemy -> Maybe (NonEmpty Enemy) -> NonEmpty Enemy
 combineEnemies newEnemies (Just enemies) = newEnemies <> enemies
 combineEnemies newEnemies Nothing        = newEnemies
+
+getMinStages :: NonEmpty Mission -> IO MinEnergyStages
+getMinStages missions = do
+  enemyunits <- TIO.readFile "./data/enemyunits.tsv"
+
+  let eu = EnemyUnitsTSV enemyunits
+
+  conn <- open "./data/stages10.2.db"
+
+  stagess <- traverse (getStages conn eu) missions
+
+  close conn
+
+  return $ findMinEnergy stagess

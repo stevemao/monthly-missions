@@ -7,8 +7,6 @@ import           BattleCats.MonthlyMissions.Types
 import qualified Data.ByteString                   as BS
 import           Data.Foldable
 import           Data.List.NonEmpty                (NonEmpty ((:|)))
-import qualified Data.Text.IO                      as TIO
-import           Database.SQLite.Simple
 import           Text.Pretty.Simple
 import           Text.Pretty.Simple.Internal.Color
 
@@ -17,25 +15,17 @@ eocCh2 = LocationLevel "EoC Ch.2"
 eocCh3 = LocationLevel "EoC Ch.3"
 itfCh1 = LocationLevel "ItF Ch.1"
 itfCh2 = LocationLevel "ItF Ch.2"
-sol = LocationCategory "SoL"
 cotcCh1 = LocationLevel "CotC Ch.1"
 cotcCh2 = LocationLevel "CotC Ch.2"
 cotcCh3 = LocationLevel "CotC Ch.3"
+sol = LocationCategory "SoL"
 
 main :: IO ()
 main = do
   let missions = Mission sol (Target "Owlbrow") :|
                [ Mission sol (Target "St. Pigge the 2nd") ]
 
-  enemyunits <- TIO.readFile "./data/enemyunits.tsv"
-
-  let eu = EnemyUnitsTSV enemyunits
-
-  conn <- open "./data/stages10.2.db"
-
-  stagess <- traverse (getStages conn eu) missions
-
-  let (MinEnergyStages stages) = findMinEnergy stagess
+  MinEnergyStages stages <- getMinStages missions
 
   traverse_ (\(stage, enemies) -> do
       BS.putStr "\n"
@@ -63,5 +53,3 @@ main = do
             BS.putStr "\n"
         ) enemies
       ) stages
-
-  close conn
