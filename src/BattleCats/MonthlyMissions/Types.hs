@@ -35,11 +35,11 @@ newtype IsBoss
   deriving (Eq, FromField, Show)
 
 data FromRowStage
-  = FromRowStage Level StageName Energy HpSpawn FirstSpawn IsBoss
+  = FromRowStage Category Level StageName Energy HpSpawn FirstSpawn IsBoss
   deriving (Show)
 
 instance FromRow FromRowStage where
-  fromRow = FromRowStage <$> field <*> field <*> field <*> field <*> field <*> field
+  fromRow = FromRowStage <$> field <*> field <*> field <*> field <*> field <*> field <*> field
 
 newtype EnemyCode
   = EnemyCode Int
@@ -58,7 +58,7 @@ newtype Target
 
 newtype Category
   = Category T.Text
-  deriving (IsString, Show, ToField)
+  deriving (Eq, FromField, IsString, Ord, Show, ToField)
 
 data Location
   = LocationLevel Level
@@ -88,11 +88,11 @@ instance Ord FastestEnemy where
       firstSpawnA <= firstSpawnB
 
 data Stage
-  = Stage Level StageName Energy
+  = Stage Category Level StageName Energy
   deriving (Eq, Ord, Show)
 
 getEnergy :: NonEmpty Stage -> Energy
-getEnergy = foldr (\(Stage _ _ e) -> (e +)) 0
+getEnergy = foldr (\(Stage _ _ _ e) -> (e +)) 0
 
 getEnergy' :: NonEmpty StageWithEnemy -> Energy
 getEnergy' stages = getEnergy (fst <$> stages)

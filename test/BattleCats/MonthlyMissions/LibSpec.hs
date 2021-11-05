@@ -16,12 +16,15 @@ main = hspec spec
 enemyWithDefault :: HpSpawn -> FirstSpawn -> Target -> Enemy
 enemyWithDefault hpSpawn firstSpawn target = Enemy hpSpawn firstSpawn target (EnemyCode 360) (IsBoss False)
 
+stageWithDefault :: Level -> StageName -> Energy -> Stage
+stageWithDefault l s e = Stage (Category "Story Mode") l s e
+
 spec :: Spec
 spec = do
   describe "findMinEnergy" $ do
     it "1 group" $ do
       let group = (
-            ( Stage
+            ( stageWithDefault
                   ( Level "CotC Ch.2" )
                   ( StageName "The Big Bang" )
                   ( Energy 110 )
@@ -33,7 +36,7 @@ spec = do
             []
             ) :|
                 [
-                    ( Stage
+                    ( stageWithDefault
                             ( Level "CotC Ch.2" )
                             ( StageName "The Big Bang" )
                             ( Energy 110 )
@@ -44,7 +47,7 @@ spec = do
                       ) :|
                     []
                 ,
-                    ( Stage
+                    ( stageWithDefault
                         ( Level "CotC Ch.2" )
                         ( StageName "The Big Bang" )
                         ( Energy 110 )
@@ -55,7 +58,7 @@ spec = do
                     ) :| []
                 ]
 
-      let expected = (Stage (Level "CotC Ch.2") (StageName "The Big Bang") (Energy 110), enemyWithDefault (HpSpawn "100%") (FirstSpawn 300) (Target "Shibalien Elite") :| [
+      let expected = (stageWithDefault (Level "CotC Ch.2") (StageName "The Big Bang") (Energy 110), enemyWithDefault (HpSpawn "100%") (FirstSpawn 300) (Target "Shibalien Elite") :| [
                   enemyWithDefault (HpSpawn "50%") (FirstSpawn 0) (Target "Star Peng")
                 , enemyWithDefault (HpSpawn "100%") (FirstSpawn 200) (Target "Cat God")
               ]) :| []
@@ -66,7 +69,7 @@ spec = do
 
     it "a few groups" $ do
       let group = (
-            ( Stage
+            ( stageWithDefault
                 ( Level "CotC Ch.2" )
                 ( StageName "Jupiter" )
                 ( Energy 62 )
@@ -76,7 +79,7 @@ spec = do
                 ( Target "Shibalien Elite" ) :| []
             ) :|
             [
-                ( Stage
+                ( stageWithDefault
                     ( Level "CotC Ch.2" )
                     ( StageName "The Big Bang" )
                     ( Energy 110 )
@@ -88,7 +91,7 @@ spec = do
             ]
             ) :|
                 [
-                    ( Stage
+                    ( stageWithDefault
                             ( Level "CotC Ch.2" )
                             ( StageName "The Big Bang" )
                             ( Energy 110 )
@@ -99,7 +102,7 @@ spec = do
                       ) :|
                     []
                 ,
-                    ( Stage
+                    ( stageWithDefault
                         ( Level "CotC Ch.2" )
                         ( StageName "The Big Bang" )
                         ( Energy 110 )
@@ -110,7 +113,7 @@ spec = do
                     ) :| []
                 ]
 
-      let expected = (Stage (Level "CotC Ch.2") (StageName "The Big Bang") (Energy 110), enemyWithDefault (HpSpawn "100%") (FirstSpawn 300) (Target "Shibalien Elite") :| [
+      let expected = (stageWithDefault (Level "CotC Ch.2") (StageName "The Big Bang") (Energy 110), enemyWithDefault (HpSpawn "100%") (FirstSpawn 300) (Target "Shibalien Elite") :| [
                   enemyWithDefault (HpSpawn "50%") (FirstSpawn 0) (Target "Star Peng")
                 , enemyWithDefault (HpSpawn "100%") (FirstSpawn 200) (Target "Cat God")
               ]) :| []
@@ -121,7 +124,7 @@ spec = do
 
     it "real world groups" $ do
       let group = (
-            ( Stage
+            ( stageWithDefault
                 ( Level "CotC Ch.2" )
                 ( StageName "Mars" )
                 ( Energy 60 )
@@ -131,7 +134,7 @@ spec = do
                 ( Target "Shibalien Elite" ) :| []
             ) :|
             [
-                ( Stage
+                ( stageWithDefault
                     ( Level "CotC Ch.2" )
                     ( StageName "Jupiter" )
                     ( Energy 62 )
@@ -141,7 +144,7 @@ spec = do
                     ( Target "Shibalien Elite" ) :| []
                 )
             ,
-                ( Stage
+                ( stageWithDefault
                     ( Level "CotC Ch.2" )
                     ( StageName "Venus" )
                     ( Energy 64 )
@@ -151,7 +154,7 @@ spec = do
                     ( Target "Shibalien Elite" ) :| []
                 )
             ,
-                ( Stage
+                ( stageWithDefault
                     ( Level "CotC Ch.2" )
                     ( StageName "Mercury" )
                     ( Energy 64 )
@@ -161,7 +164,7 @@ spec = do
                     ( Target "Shibalien Elite" ) :| []
                 )
             ,
-                ( Stage
+                ( stageWithDefault
                     ( Level "CotC Ch.2" )
                     ( StageName "Uranus" )
                     ( Energy 62 )
@@ -171,7 +174,7 @@ spec = do
                     ( Target "Shibalien Elite" ) :| []
                 )
             ,
-                ( Stage
+                ( stageWithDefault
                     ( Level "CotC Ch.2" )
                     ( StageName "Triton" )
                     ( Energy 65 )
@@ -181,7 +184,7 @@ spec = do
                     ( Target "Shibalien Elite" ) :| []
                 )
             ,
-                ( Stage
+                ( stageWithDefault
                     ( Level "CotC Ch.2" )
                     ( StageName "Red Rectangle" )
                     ( Energy 67 )
@@ -191,7 +194,7 @@ spec = do
                     ( Target "Shibalien Elite" ) :| []
                 )
             ,
-                ( Stage
+                ( stageWithDefault
                     ( Level "CotC Ch.2" )
                     ( StageName "Calabash Nebula" )
                     ( Energy 74 )
@@ -201,7 +204,7 @@ spec = do
                     ( Target "Shibalien Elite" ) :| []
                 )
             ,
-                ( Stage
+                ( stageWithDefault
                     ( Level "CotC Ch.2" )
                     ( StageName "Sirius" )
                     ( Energy 78 )
@@ -211,7 +214,7 @@ spec = do
                     ( Target "Shibalien Elite" ) :| []
                 )
             ,
-                ( Stage
+                ( stageWithDefault
                     ( Level "CotC Ch.2" )
                     ( StageName "Aldebaran" )
                     ( Energy 83 )
@@ -221,7 +224,7 @@ spec = do
                     ( Target "Shibalien Elite" ) :| []
                 )
             ,
-                ( Stage
+                ( stageWithDefault
                     ( Level "CotC Ch.2" )
                     ( StageName "Betelgeuse" )
                     ( Energy 81 )
@@ -231,7 +234,7 @@ spec = do
                     ( Target "Shibalien Elite" ) :| []
                 )
             ,
-                ( Stage
+                ( stageWithDefault
                     ( Level "CotC Ch.2" )
                     ( StageName "Sighter's Star" )
                     ( Energy 82 )
@@ -241,7 +244,7 @@ spec = do
                     ( Target "Shibalien Elite" ) :| []
                 )
             ,
-                ( Stage
+                ( stageWithDefault
                     ( Level "CotC Ch.2" )
                     ( StageName "Corona" )
                     ( Energy 83 )
@@ -251,7 +254,7 @@ spec = do
                     ( Target "Shibalien Elite" ) :| []
                 )
             ,
-                ( Stage
+                ( stageWithDefault
                     ( Level "CotC Ch.2" )
                     ( StageName "Darararah" )
                     ( Energy 85 )
@@ -261,7 +264,7 @@ spec = do
                     ( Target "Shibalien Elite" ) :| []
                 )
             ,
-                ( Stage
+                ( stageWithDefault
                     ( Level "CotC Ch.2" )
                     ( StageName "Thanxbye" )
                     ( Energy 82 )
@@ -271,7 +274,7 @@ spec = do
                     ( Target "Shibalien Elite" ) :| []
                 )
             ,
-                ( Stage
+                ( stageWithDefault
                     ( Level "CotC Ch.2" )
                     ( StageName "Aguham" )
                     ( Energy 85 )
@@ -281,7 +284,7 @@ spec = do
                     ( Target "Shibalien Elite" ) :| []
                 )
             ,
-                ( Stage
+                ( stageWithDefault
                     ( Level "CotC Ch.2" )
                     ( StageName "Andromeda" )
                     ( Energy 95 )
@@ -291,7 +294,7 @@ spec = do
                     ( Target "Shibalien Elite" ) :| []
                 )
             ,
-                ( Stage
+                ( stageWithDefault
                     ( Level "CotC Ch.2" )
                     ( StageName "The Big Bang" )
                     ( Energy 110 )
@@ -303,7 +306,7 @@ spec = do
             ]
             ) :|
                 [
-                    ( Stage
+                    ( stageWithDefault
                         ( Level "CotC Ch.2" )
                         ( StageName "Mars" )
                         ( Energy 60 )
@@ -313,7 +316,7 @@ spec = do
                         ( Target "Star Peng" ) :| []
                     ) :|
                     [
-                        ( Stage
+                        ( stageWithDefault
                             ( Level "CotC Ch.2" )
                             ( StageName "Venus" )
                             ( Energy 64 )
@@ -323,7 +326,7 @@ spec = do
                             ( Target "Star Peng" ) :| []
                         )
                     ,
-                        ( Stage
+                        ( stageWithDefault
                             ( Level "CotC Ch.2" )
                             ( StageName "Mercury" )
                             ( Energy 64 )
@@ -333,7 +336,7 @@ spec = do
                             ( Target "Star Peng" ) :| []
                         )
                     ,
-                        ( Stage
+                        ( stageWithDefault
                             ( Level "CotC Ch.2" )
                             ( StageName "Red Rectangle" )
                             ( Energy 67 )
@@ -343,7 +346,7 @@ spec = do
                             ( Target "Star Peng" ) :| []
                         )
                     ,
-                        ( Stage
+                        ( stageWithDefault
                             ( Level "CotC Ch.2" )
                             ( StageName "Eskimo Nebula" )
                             ( Energy 70 )
@@ -353,7 +356,7 @@ spec = do
                             ( Target "Star Peng" ) :| []
                         )
                     ,
-                        ( Stage
+                        ( stageWithDefault
                             ( Level "CotC Ch.2" )
                             ( StageName "Catseye Nebula" )
                             ( Energy 72 )
@@ -363,7 +366,7 @@ spec = do
                             ( Target "Star Peng" ) :| []
                         )
                     ,
-                        ( Stage
+                        ( stageWithDefault
                             ( Level "CotC Ch.2" )
                             ( StageName "Egg Nebula" )
                             ( Energy 75 )
@@ -373,7 +376,7 @@ spec = do
                             ( Target "Star Peng" ) :| []
                         )
                     ,
-                        ( Stage
+                        ( stageWithDefault
                             ( Level "CotC Ch.2" )
                             ( StageName "Altair" )
                             ( Energy 80 )
@@ -383,7 +386,7 @@ spec = do
                             ( Target "Star Peng" ) :| []
                         )
                     ,
-                        ( Stage
+                        ( stageWithDefault
                             ( Level "CotC Ch.2" )
                             ( StageName "Canopus" )
                             ( Energy 82 )
@@ -393,7 +396,7 @@ spec = do
                             ( Target "Star Peng" ) :| []
                         )
                     ,
-                        ( Stage
+                        ( stageWithDefault
                             ( Level "CotC Ch.2" )
                             ( StageName "Aldebaran" )
                             ( Energy 83 )
@@ -403,7 +406,7 @@ spec = do
                             ( Target "Star Peng" ) :| []
                         )
                     ,
-                        ( Stage
+                        ( stageWithDefault
                             ( Level "CotC Ch.2" )
                             ( StageName "Cosmic Lounge" )
                             ( Energy 90 )
@@ -413,7 +416,7 @@ spec = do
                             ( Target "Star Peng" ) :| []
                         )
                     ,
-                        ( Stage
+                        ( stageWithDefault
                             ( Level "CotC Ch.2" )
                             ( StageName "Corona" )
                             ( Energy 83 )
@@ -423,7 +426,7 @@ spec = do
                             ( Target "Star Peng" ) :| []
                         )
                     ,
-                        ( Stage
+                        ( stageWithDefault
                             ( Level "CotC Ch.2" )
                             ( StageName "Thanxbye" )
                             ( Energy 82 )
@@ -433,7 +436,7 @@ spec = do
                             ( Target "Star Peng" ) :| []
                         )
                     ,
-                        ( Stage
+                        ( stageWithDefault
                             ( Level "CotC Ch.2" )
                             ( StageName "Mertoz" )
                             ( Energy 80 )
@@ -443,7 +446,7 @@ spec = do
                             ( Target "Star Peng" ) :| []
                         )
                     ,
-                        ( Stage
+                        ( stageWithDefault
                             ( Level "CotC Ch.2" )
                             ( StageName "Aguham" )
                             ( Energy 85 )
@@ -453,7 +456,7 @@ spec = do
                             ( Target "Star Peng" ) :| []
                         )
                     ,
-                        ( Stage
+                        ( stageWithDefault
                             ( Level "CotC Ch.2" )
                             ( StageName "Skelling" )
                             ( Energy 90 )
@@ -463,7 +466,7 @@ spec = do
                             ( Target "Star Peng" ) :| []
                         )
                     ,
-                        ( Stage
+                        ( stageWithDefault
                             ( Level "CotC Ch.2" )
                             ( StageName "Black Hole" )
                             ( Energy 105 )
@@ -473,7 +476,7 @@ spec = do
                             ( Target "Star Peng" ) :| []
                         )
                     ,
-                        ( Stage
+                        ( stageWithDefault
                             ( Level "CotC Ch.2" )
                             ( StageName "The Big Bang" )
                             ( Energy 110 )
@@ -484,7 +487,7 @@ spec = do
                         )
                     ]
                 ,
-                    ( Stage
+                    ( stageWithDefault
                         ( Level "CotC Ch.2" )
                         ( StageName "The Big Bang" )
                         ( Energy 110 )
@@ -495,7 +498,7 @@ spec = do
                     ) :| []
                 ]
 
-      let expected = (Stage (Level "CotC Ch.2") (StageName "The Big Bang") (Energy 110), enemyWithDefault (HpSpawn "100%") (FirstSpawn 300) (Target "Shibalien Elite") :| [
+      let expected = (stageWithDefault (Level "CotC Ch.2") (StageName "The Big Bang") (Energy 110), enemyWithDefault (HpSpawn "100%") (FirstSpawn 300) (Target "Shibalien Elite") :| [
                   enemyWithDefault (HpSpawn "50%") (FirstSpawn 0) (Target "Star Peng")
                 , enemyWithDefault (HpSpawn "100%") (FirstSpawn 200) (Target "Cat God")
               ]) :| []
