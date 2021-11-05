@@ -13,6 +13,9 @@ import           Data.List.NonEmpty               (NonEmpty ((:|)))
 main :: IO ()
 main = hspec spec
 
+enemyWithDefault :: HpSpawn -> FirstSpawn -> Target -> Enemy
+enemyWithDefault hpSpawn firstSpawn target = Enemy hpSpawn firstSpawn target (EnemyCode 360) (IsBoss False)
+
 spec :: Spec
 spec = do
   describe "findMinEnergy" $ do
@@ -22,11 +25,10 @@ spec = do
                   ( Level "CotC Ch.2" )
                   ( StageName "The Big Bang" )
                   ( Energy 110 )
-              , Enemy
+              , enemyWithDefault
                   ( HpSpawn "100%" )
                   ( FirstSpawn 300 )
-                  ( Target "Shibalien Elite" )
-                  ( EnemyCode 360 ) :| []
+                  ( Target "Shibalien Elite" ) :| []
               ) :|
             []
             ) :|
@@ -35,11 +37,10 @@ spec = do
                             ( Level "CotC Ch.2" )
                             ( StageName "The Big Bang" )
                             ( Energy 110 )
-                      , Enemy
+                      , enemyWithDefault
                           ( HpSpawn "50%" )
                           ( FirstSpawn 0 )
-                          ( Target "Star Peng" )
-                          ( EnemyCode 361 ) :| []
+                          ( Target "Star Peng" ) :| []
                       ) :|
                     []
                 ,
@@ -47,17 +48,16 @@ spec = do
                         ( Level "CotC Ch.2" )
                         ( StageName "The Big Bang" )
                         ( Energy 110 )
-                    , Enemy
+                    , enemyWithDefault
                         ( HpSpawn "100%" )
                         ( FirstSpawn 200 )
-                        ( Target "Cat God" )
-                        ( EnemyCode 419 ) :| []
+                        ( Target "Cat God" ) :| []
                     ) :| []
                 ]
 
-      let expected = (Stage (Level "CotC Ch.2") (StageName "The Big Bang") (Energy 110),Enemy (HpSpawn "100%") (FirstSpawn 300) (Target "Shibalien Elite") ( EnemyCode 360 ) :| [
-                  Enemy (HpSpawn "50%") (FirstSpawn 0) (Target "Star Peng") ( EnemyCode 361 )
-                , Enemy (HpSpawn "100%") (FirstSpawn 200) (Target "Cat God") ( EnemyCode 419 )
+      let expected = (Stage (Level "CotC Ch.2") (StageName "The Big Bang") (Energy 110), enemyWithDefault (HpSpawn "100%") (FirstSpawn 300) (Target "Shibalien Elite") :| [
+                  enemyWithDefault (HpSpawn "50%") (FirstSpawn 0) (Target "Star Peng")
+                , enemyWithDefault (HpSpawn "100%") (FirstSpawn 200) (Target "Cat God")
               ]) :| []
 
       let (MinEnergyStages stages) = findMinEnergy group
@@ -70,22 +70,20 @@ spec = do
                 ( Level "CotC Ch.2" )
                 ( StageName "Jupiter" )
                 ( Energy 62 )
-            , Enemy
+            , enemyWithDefault
                 ( HpSpawn "99%" )
                 ( FirstSpawn 0 )
-                ( Target "Shibalien Elite" )
-                ( EnemyCode 360 ) :| []
+                ( Target "Shibalien Elite" ) :| []
             ) :|
             [
                 ( Stage
                     ( Level "CotC Ch.2" )
                     ( StageName "The Big Bang" )
                     ( Energy 110 )
-                , Enemy
+                , enemyWithDefault
                     ( HpSpawn "100%" )
                     ( FirstSpawn 300 )
-                    ( Target "Shibalien Elite" )
-                    ( EnemyCode 360 ) :| []
+                    ( Target "Shibalien Elite" ) :| []
                 )
             ]
             ) :|
@@ -94,11 +92,10 @@ spec = do
                             ( Level "CotC Ch.2" )
                             ( StageName "The Big Bang" )
                             ( Energy 110 )
-                      , Enemy
+                      , enemyWithDefault
                           ( HpSpawn "50%" )
                           ( FirstSpawn 0 )
-                          ( Target "Star Peng" )
-                          ( EnemyCode 361 ) :| []
+                          ( Target "Star Peng" ) :| []
                       ) :|
                     []
                 ,
@@ -106,17 +103,16 @@ spec = do
                         ( Level "CotC Ch.2" )
                         ( StageName "The Big Bang" )
                         ( Energy 110 )
-                    , Enemy
+                    , enemyWithDefault
                         ( HpSpawn "100%" )
                         ( FirstSpawn 200 )
-                        ( Target "Cat God" )
-                        ( EnemyCode 419 ) :| []
+                        ( Target "Cat God" ) :| []
                     ) :| []
                 ]
 
-      let expected = (Stage (Level "CotC Ch.2") (StageName "The Big Bang") (Energy 110),Enemy (HpSpawn "100%") (FirstSpawn 300) (Target "Shibalien Elite") ( EnemyCode 360 ) :| [
-                  Enemy (HpSpawn "50%") (FirstSpawn 0) (Target "Star Peng") ( EnemyCode 361 )
-                , Enemy (HpSpawn "100%") (FirstSpawn 200) (Target "Cat God") ( EnemyCode 419 )
+      let expected = (Stage (Level "CotC Ch.2") (StageName "The Big Bang") (Energy 110), enemyWithDefault (HpSpawn "100%") (FirstSpawn 300) (Target "Shibalien Elite") :| [
+                  enemyWithDefault (HpSpawn "50%") (FirstSpawn 0) (Target "Star Peng")
+                , enemyWithDefault (HpSpawn "100%") (FirstSpawn 200) (Target "Cat God")
               ]) :| []
 
       let (MinEnergyStages stages) = findMinEnergy group
@@ -129,198 +125,180 @@ spec = do
                 ( Level "CotC Ch.2" )
                 ( StageName "Mars" )
                 ( Energy 60 )
-            , Enemy
+            , enemyWithDefault
                 ( HpSpawn "100%" )
                 ( FirstSpawn 400 )
-                ( Target "Shibalien Elite" )
-                ( EnemyCode 360 ) :| []
+                ( Target "Shibalien Elite" ) :| []
             ) :|
             [
                 ( Stage
                     ( Level "CotC Ch.2" )
                     ( StageName "Jupiter" )
                     ( Energy 62 )
-                , Enemy
+                , enemyWithDefault
                     ( HpSpawn "99%" )
                     ( FirstSpawn 0 )
-                    ( Target "Shibalien Elite" )
-                    ( EnemyCode 360 ) :| []
+                    ( Target "Shibalien Elite" ) :| []
                 )
             ,
                 ( Stage
                     ( Level "CotC Ch.2" )
                     ( StageName "Venus" )
                     ( Energy 64 )
-                , Enemy
+                , enemyWithDefault
                     ( HpSpawn "99%" )
                     ( FirstSpawn 0 )
-                    ( Target "Shibalien Elite" )
-                    ( EnemyCode 360 ) :| []
+                    ( Target "Shibalien Elite" ) :| []
                 )
             ,
                 ( Stage
                     ( Level "CotC Ch.2" )
                     ( StageName "Mercury" )
                     ( Energy 64 )
-                , Enemy
+                , enemyWithDefault
                     ( HpSpawn "100%" )
                     ( FirstSpawn 500 )
-                    ( Target "Shibalien Elite" )
-                    ( EnemyCode 360 ) :| []
+                    ( Target "Shibalien Elite" ) :| []
                 )
             ,
                 ( Stage
                     ( Level "CotC Ch.2" )
                     ( StageName "Uranus" )
                     ( Energy 62 )
-                , Enemy
+                , enemyWithDefault
                     ( HpSpawn "99%" )
                     ( FirstSpawn 0 )
-                    ( Target "Shibalien Elite" )
-                    ( EnemyCode 360 ) :| []
+                    ( Target "Shibalien Elite" ) :| []
                 )
             ,
                 ( Stage
                     ( Level "CotC Ch.2" )
                     ( StageName "Triton" )
                     ( Energy 65 )
-                , Enemy
+                , enemyWithDefault
                     ( HpSpawn "100%" )
                     ( FirstSpawn 900 )
-                    ( Target "Shibalien Elite" )
-                    ( EnemyCode 360 ) :| []
+                    ( Target "Shibalien Elite" ) :| []
                 )
             ,
                 ( Stage
                     ( Level "CotC Ch.2" )
                     ( StageName "Red Rectangle" )
                     ( Energy 67 )
-                , Enemy
+                , enemyWithDefault
                     ( HpSpawn "100%" )
                     ( FirstSpawn 2 )
-                    ( Target "Shibalien Elite" )
-                    ( EnemyCode 360 ) :| []
+                    ( Target "Shibalien Elite" ) :| []
                 )
             ,
                 ( Stage
                     ( Level "CotC Ch.2" )
                     ( StageName "Calabash Nebula" )
                     ( Energy 74 )
-                , Enemy
+                , enemyWithDefault
                     ( HpSpawn "100%" )
                     ( FirstSpawn 1900 )
-                    ( Target "Shibalien Elite" )
-                    ( EnemyCode 360 ) :| []
+                    ( Target "Shibalien Elite" ) :| []
                 )
             ,
                 ( Stage
                     ( Level "CotC Ch.2" )
                     ( StageName "Sirius" )
                     ( Energy 78 )
-                , Enemy
+                , enemyWithDefault
                     ( HpSpawn "100%" )
                     ( FirstSpawn 1500 )
-                    ( Target "Shibalien Elite" )
-                    ( EnemyCode 360 ) :| []
+                    ( Target "Shibalien Elite" ) :| []
                 )
             ,
                 ( Stage
                     ( Level "CotC Ch.2" )
                     ( StageName "Aldebaran" )
                     ( Energy 83 )
-                , Enemy
+                , enemyWithDefault
                     ( HpSpawn "100%" )
                     ( FirstSpawn 500 )
-                    ( Target "Shibalien Elite" )
-                    ( EnemyCode 360 ) :| []
+                    ( Target "Shibalien Elite" ) :| []
                 )
             ,
                 ( Stage
                     ( Level "CotC Ch.2" )
                     ( StageName "Betelgeuse" )
                     ( Energy 81 )
-                , Enemy
+                , enemyWithDefault
                     ( HpSpawn "100%" )
                     ( FirstSpawn 2000 )
-                    ( Target "Shibalien Elite" )
-                    ( EnemyCode 360 ) :| []
+                    ( Target "Shibalien Elite" ) :| []
                 )
             ,
                 ( Stage
                     ( Level "CotC Ch.2" )
                     ( StageName "Sighter's Star" )
                     ( Energy 82 )
-                , Enemy
+                , enemyWithDefault
                     ( HpSpawn "100%" )
                     ( FirstSpawn 1000 )
-                    ( Target "Shibalien Elite" )
-                    ( EnemyCode 360 ) :| []
+                    ( Target "Shibalien Elite" ) :| []
                 )
             ,
                 ( Stage
                     ( Level "CotC Ch.2" )
                     ( StageName "Corona" )
                     ( Energy 83 )
-                , Enemy
+                , enemyWithDefault
                     ( HpSpawn "99%" )
                     ( FirstSpawn 0 )
-                    ( Target "Shibalien Elite" )
-                    ( EnemyCode 360 ) :| []
+                    ( Target "Shibalien Elite" ) :| []
                 )
             ,
                 ( Stage
                     ( Level "CotC Ch.2" )
                     ( StageName "Darararah" )
                     ( Energy 85 )
-                , Enemy
+                , enemyWithDefault
                     ( HpSpawn "100%" )
                     ( FirstSpawn 2 )
-                    ( Target "Shibalien Elite" )
-                    ( EnemyCode 360 ) :| []
+                    ( Target "Shibalien Elite" ) :| []
                 )
             ,
                 ( Stage
                     ( Level "CotC Ch.2" )
                     ( StageName "Thanxbye" )
                     ( Energy 82 )
-                , Enemy
+                , enemyWithDefault
                     ( HpSpawn "100%" )
                     ( FirstSpawn 1200 )
-                    ( Target "Shibalien Elite" )
-                    ( EnemyCode 360 ) :| []
+                    ( Target "Shibalien Elite" ) :| []
                 )
             ,
                 ( Stage
                     ( Level "CotC Ch.2" )
                     ( StageName "Aguham" )
                     ( Energy 85 )
-                , Enemy
+                , enemyWithDefault
                     ( HpSpawn "99%" )
                     ( FirstSpawn 0 )
-                    ( Target "Shibalien Elite" )
-                    ( EnemyCode 360 ) :| []
+                    ( Target "Shibalien Elite" ) :| []
                 )
             ,
                 ( Stage
                     ( Level "CotC Ch.2" )
                     ( StageName "Andromeda" )
                     ( Energy 95 )
-                , Enemy
+                , enemyWithDefault
                     ( HpSpawn "99%" )
                     ( FirstSpawn 2 )
-                    ( Target "Shibalien Elite" )
-                    ( EnemyCode 360 ) :| []
+                    ( Target "Shibalien Elite" ) :| []
                 )
             ,
                 ( Stage
                     ( Level "CotC Ch.2" )
                     ( StageName "The Big Bang" )
                     ( Energy 110 )
-                , Enemy
+                , enemyWithDefault
                     ( HpSpawn "100%" )
                     ( FirstSpawn 300 )
-                    ( Target "Shibalien Elite" )
-                    ( EnemyCode 360 ) :| []
+                    ( Target "Shibalien Elite" ) :| []
                 )
             ]
             ) :|
@@ -329,198 +307,180 @@ spec = do
                         ( Level "CotC Ch.2" )
                         ( StageName "Mars" )
                         ( Energy 60 )
-                    , Enemy
+                    , enemyWithDefault
                         ( HpSpawn "100%" )
                         ( FirstSpawn 800 )
-                        ( Target "Star Peng" )
-                         ( EnemyCode 361 ) :| []
+                        ( Target "Star Peng" ) :| []
                     ) :|
                     [
                         ( Stage
                             ( Level "CotC Ch.2" )
                             ( StageName "Venus" )
                             ( Energy 64 )
-                        , Enemy
+                        , enemyWithDefault
                             ( HpSpawn "99%" )
                             ( FirstSpawn 0 )
-                            ( Target "Star Peng" )
-                            ( EnemyCode 361 ) :| []
+                            ( Target "Star Peng" ) :| []
                         )
                     ,
                         ( Stage
                             ( Level "CotC Ch.2" )
                             ( StageName "Mercury" )
                             ( Energy 64 )
-                        , Enemy
+                        , enemyWithDefault
                             ( HpSpawn "100%" )
                             ( FirstSpawn 1100 )
-                            ( Target "Star Peng" )
-                            ( EnemyCode 361 ) :| []
+                            ( Target "Star Peng" ) :| []
                         )
                     ,
                         ( Stage
                             ( Level "CotC Ch.2" )
                             ( StageName "Red Rectangle" )
                             ( Energy 67 )
-                        , Enemy
+                        , enemyWithDefault
                             ( HpSpawn "100%" )
                             ( FirstSpawn 1100 )
-                            ( Target "Star Peng" )
-                            ( EnemyCode 361 ) :| []
+                            ( Target "Star Peng" ) :| []
                         )
                     ,
                         ( Stage
                             ( Level "CotC Ch.2" )
                             ( StageName "Eskimo Nebula" )
                             ( Energy 70 )
-                        , Enemy
+                        , enemyWithDefault
                             ( HpSpawn "99%" )
                             ( FirstSpawn 0 )
-                            ( Target "Star Peng" )
-                            ( EnemyCode 361 ) :| []
+                            ( Target "Star Peng" ) :| []
                         )
                     ,
                         ( Stage
                             ( Level "CotC Ch.2" )
                             ( StageName "Catseye Nebula" )
                             ( Energy 72 )
-                        , Enemy
+                        , enemyWithDefault
                             ( HpSpawn "100%" )
                             ( FirstSpawn 1700 )
-                            ( Target "Star Peng" )
-                            ( EnemyCode 361 ) :| []
+                            ( Target "Star Peng" ) :| []
                         )
                     ,
                         ( Stage
                             ( Level "CotC Ch.2" )
                             ( StageName "Egg Nebula" )
                             ( Energy 75 )
-                        , Enemy
+                        , enemyWithDefault
                             ( HpSpawn "100%" )
                             ( FirstSpawn 2400 )
-                            ( Target "Star Peng" )
-                            ( EnemyCode 361 ) :| []
+                            ( Target "Star Peng" ) :| []
                         )
                     ,
                         ( Stage
                             ( Level "CotC Ch.2" )
                             ( StageName "Altair" )
                             ( Energy 80 )
-                        , Enemy
+                        , enemyWithDefault
                             ( HpSpawn "100%" )
                             ( FirstSpawn 900 )
-                            ( Target "Star Peng" )
-                            ( EnemyCode 361 ) :| []
+                            ( Target "Star Peng" ) :| []
                         )
                     ,
                         ( Stage
                             ( Level "CotC Ch.2" )
                             ( StageName "Canopus" )
                             ( Energy 82 )
-                        , Enemy
+                        , enemyWithDefault
                             ( HpSpawn "100%" )
                             ( FirstSpawn 600 )
-                            ( Target "Star Peng" )
-                            ( EnemyCode 361 ) :| []
+                            ( Target "Star Peng" ) :| []
                         )
                     ,
                         ( Stage
                             ( Level "CotC Ch.2" )
                             ( StageName "Aldebaran" )
                             ( Energy 83 )
-                        , Enemy
+                        , enemyWithDefault
                             ( HpSpawn "100%" )
                             ( FirstSpawn 1600 )
-                            ( Target "Star Peng" )
-                            ( EnemyCode 361 ) :| []
+                            ( Target "Star Peng" ) :| []
                         )
                     ,
                         ( Stage
                             ( Level "CotC Ch.2" )
                             ( StageName "Cosmic Lounge" )
                             ( Energy 90 )
-                        , Enemy
+                        , enemyWithDefault
                             ( HpSpawn "100%" )
                             ( FirstSpawn 1300 )
-                            ( Target "Star Peng" )
-                            ( EnemyCode 361 ) :| []
+                            ( Target "Star Peng" ) :| []
                         )
                     ,
                         ( Stage
                             ( Level "CotC Ch.2" )
                             ( StageName "Corona" )
                             ( Energy 83 )
-                        , Enemy
+                        , enemyWithDefault
                             ( HpSpawn "99%" )
                             ( FirstSpawn 0 )
-                            ( Target "Star Peng" )
-                            ( EnemyCode 361 ) :| []
+                            ( Target "Star Peng" ) :| []
                         )
                     ,
                         ( Stage
                             ( Level "CotC Ch.2" )
                             ( StageName "Thanxbye" )
                             ( Energy 82 )
-                        , Enemy
+                        , enemyWithDefault
                             ( HpSpawn "99%" )
                             ( FirstSpawn 2 )
-                            ( Target "Star Peng" )
-                            ( EnemyCode 361 ) :| []
+                            ( Target "Star Peng" ) :| []
                         )
                     ,
                         ( Stage
                             ( Level "CotC Ch.2" )
                             ( StageName "Mertoz" )
                             ( Energy 80 )
-                        , Enemy
+                        , enemyWithDefault
                             ( HpSpawn "100%" )
                             ( FirstSpawn 500 )
-                            ( Target "Star Peng" )
-                            ( EnemyCode 361 ) :| []
+                            ( Target "Star Peng" ) :| []
                         )
                     ,
                         ( Stage
                             ( Level "CotC Ch.2" )
                             ( StageName "Aguham" )
                             ( Energy 85 )
-                        , Enemy
+                        , enemyWithDefault
                             ( HpSpawn "99%" )
                             ( FirstSpawn 0 )
-                            ( Target "Star Peng" )
-                            ( EnemyCode 361 ) :| []
+                            ( Target "Star Peng" ) :| []
                         )
                     ,
                         ( Stage
                             ( Level "CotC Ch.2" )
                             ( StageName "Skelling" )
                             ( Energy 90 )
-                        , Enemy
+                        , enemyWithDefault
                             ( HpSpawn "99%" )
                             ( FirstSpawn 0 )
-                            ( Target "Star Peng" )
-                            ( EnemyCode 361 ) :| []
+                            ( Target "Star Peng" ) :| []
                         )
                     ,
                         ( Stage
                             ( Level "CotC Ch.2" )
                             ( StageName "Black Hole" )
                             ( Energy 105 )
-                        , Enemy
+                        , enemyWithDefault
                             ( HpSpawn "100%" )
                             ( FirstSpawn 1000 )
-                            ( Target "Star Peng" )
-                            ( EnemyCode 361 ) :| []
+                            ( Target "Star Peng" ) :| []
                         )
                     ,
                         ( Stage
                             ( Level "CotC Ch.2" )
                             ( StageName "The Big Bang" )
                             ( Energy 110 )
-                        , Enemy
+                        , enemyWithDefault
                             ( HpSpawn "50%" )
                             ( FirstSpawn 0 )
-                            ( Target "Star Peng" )
-                            ( EnemyCode 361 ) :| []
+                            ( Target "Star Peng" ) :| []
                         )
                     ]
                 ,
@@ -528,17 +488,16 @@ spec = do
                         ( Level "CotC Ch.2" )
                         ( StageName "The Big Bang" )
                         ( Energy 110 )
-                    , Enemy
+                    , enemyWithDefault
                         ( HpSpawn "100%" )
                         ( FirstSpawn 200 )
-                        ( Target "Cat God" )
-                        ( EnemyCode 419 ) :| []
+                        ( Target "Cat God" ) :| []
                     ) :| []
                 ]
 
-      let expected = (Stage (Level "CotC Ch.2") (StageName "The Big Bang") (Energy 110),Enemy (HpSpawn "100%") (FirstSpawn 300) (Target "Shibalien Elite") ( EnemyCode 360 ) :| [
-                  Enemy (HpSpawn "50%") (FirstSpawn 0) (Target "Star Peng") ( EnemyCode 361 )
-                , Enemy (HpSpawn "100%") (FirstSpawn 200) (Target "Cat God") ( EnemyCode 419 )
+      let expected = (Stage (Level "CotC Ch.2") (StageName "The Big Bang") (Energy 110), enemyWithDefault (HpSpawn "100%") (FirstSpawn 300) (Target "Shibalien Elite") :| [
+                  enemyWithDefault (HpSpawn "50%") (FirstSpawn 0) (Target "Star Peng")
+                , enemyWithDefault (HpSpawn "100%") (FirstSpawn 200) (Target "Cat God")
               ]) :| []
 
       let (MinEnergyStages stages) = findMinEnergy group

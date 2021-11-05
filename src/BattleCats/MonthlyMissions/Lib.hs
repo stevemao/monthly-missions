@@ -49,12 +49,12 @@ getStages conn enemyunits m@(Mission location target) = do
     case nonEmpty stages of
         Nothing -> throwIO (errorWithoutStackTrace $ "could not find " <> show m :: SomeException)
         Just nonEmptyStages -> do
-          let fromRowStage = groupBy1
+          let sameStageRows = groupBy1
                               (\(FromRowStage levelA nameA energyA _ _ _) (FromRowStage levelB nameB energyB _ _ _) ->
                                         Stage levelA nameA energyA == Stage levelB nameB energyB)
                               nonEmptyStages
 
-          return $ findFastestEnemy target code <$> fromRowStage
+          return $ findFastestEnemy target code <$> sameStageRows
 
 findFastestEnemy :: Target -> EnemyCode -> NonEmpty FromRowStage -> StageWithEnemy
 findFastestEnemy t c s@(FromRowStage level name energy _ _ _ :| _) = (Stage level name energy, fastestEnemies)
