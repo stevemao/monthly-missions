@@ -15,6 +15,3 @@ It shows when enemy will appear to avoid clearing the stage too quickly
 1. for more information, check `monthly-missions --help`
 
 ## Roadmap
-
-1. where roughly is the stage?
-1. does the stage have boss?

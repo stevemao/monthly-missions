@@ -42,7 +42,7 @@ data FromRowStage
   deriving (Show)
 
 data AdjustedFromRowStage
-  = AdjustedFromRowStage Category Level DBLevel StageName Energy HpSpawn FirstSpawn IsBoss
+  = AdjustedFromRowStage Category Level StageName Energy HpSpawn FirstSpawn IsBoss
 
 instance FromRow FromRowStage where
   fromRow = FromRowStage <$> field <*> field <*> field <*> field <*> field <*> field <*> field
