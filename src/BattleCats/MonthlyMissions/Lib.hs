@@ -38,28 +38,29 @@ getStages conn enemyunits m@(Mission location target) = do
 
                             let extraParams = (\(s, i) -> (":excludedStage" <> (T.pack . show $ i)) := s) <$> excludedStagesWithIndex
 
-                            stages <- queryNamed conn ("SELECT level, stage, energy, u.hpspawn, u.firstspawn from stages s JOIN units u ON u.stageid = s.stageid WHERE u.enemycode = :enemycode AND level = :level"
+                            stages <- queryNamed conn ("SELECT level, stage, energy, u.hpspawn, u.firstspawn, u.isboss from stages s JOIN units u ON u.stageid = s.stageid WHERE u.enemycode = :enemycode AND level = :level"
                                                     <> extraQuery)
                                                     ([":enemycode" := enemycode, ":level" := level'] <> extraParams)
 
-                            return $ (\(FromRowStage _ n e h f) -> FromRowStage level n (e + energyAdjustment) h f) <$> stages
+                            return $ (\(FromRowStage _ n e h f isBoss) -> FromRowStage level n (e + energyAdjustment) h f isBoss) <$> stages
       LocationCategory category -> do
-                            queryNamed conn "SELECT level, stage, energy, u.hpspawn, u.firstspawn from stages s JOIN units u ON u.stageid = s.stageid WHERE u.enemycode = :enemycode AND category = :category"
+                            queryNamed conn "SELECT level, stage, energy, u.hpspawn, u.firstspawn, u.isboss from stages s JOIN units u ON u.stageid = s.stageid WHERE u.enemycode = :enemycode AND category = :category"
                                            [":enemycode" := enemycode, ":category" := category]
     case nonEmpty stages of
         Nothing -> throwIO (errorWithoutStackTrace $ "could not find " <> show m :: SomeException)
         Just nonEmptyStages -> do
           let fromRowStage = groupBy1
-                              (\(FromRowStage levelA nameA energyA _ _) (FromRowStage levelB nameB energyB _ _) ->
+                              (\(FromRowStage levelA nameA energyA _ _ _) (FromRowStage levelB nameB energyB _ _ _) ->
                                         Stage levelA nameA energyA == Stage levelB nameB energyB)
                               nonEmptyStages
 
           return $ findFastestEnemy target code <$> fromRowStage
 
 findFastestEnemy :: Target -> EnemyCode -> NonEmpty FromRowStage -> StageWithEnemy
-findFastestEnemy t c s@(FromRowStage level name energy _ _ :| _) = (Stage level name energy, fastestEnemies)
+findFastestEnemy t c s@(FromRowStage level name energy _ _ _ :| _) = (Stage level name energy, fastestEnemies)
     where fastestEnemies = (\(FastestEnemy e) -> e) <$> minimum (FastestEnemy <$> enemies) :| []
-          enemies = (\(FromRowStage _ _ _ hpSpawn firstSpawn) -> Enemy hpSpawn firstSpawn t c) <$> s
+          enemies :: NonEmpty Enemy
+          enemies = (\(FromRowStage _ _ _ hpSpawn firstSpawn isBoss) -> Enemy hpSpawn firstSpawn t c isBoss) <$> s
 
 findMinEnergy :: NonEmpty (NonEmpty StageWithEnemy) -> MinEnergyStages
 findMinEnergy stageEnemies = minimum stages

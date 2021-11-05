@@ -77,7 +77,7 @@ main = do
 
           pPrint stage
 
-          traverse (\enemy@(Enemy _ _ _ code) -> do
+          traverse (\enemy@(Enemy _ _ _ code _) -> do
                 pPrintIndented enemy
 
                 BS.putStr "         "

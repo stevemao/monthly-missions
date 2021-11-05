@@ -30,12 +30,16 @@ newtype FirstSpawn
   = FirstSpawn Int
   deriving (Eq, FromField, Ord, Show)
 
+newtype IsBoss
+  = IsBoss Bool
+  deriving (Eq, FromField, Show)
+
 data FromRowStage
-  = FromRowStage Level StageName Energy HpSpawn FirstSpawn
+  = FromRowStage Level StageName Energy HpSpawn FirstSpawn IsBoss
   deriving (Show)
 
 instance FromRow FromRowStage where
-  fromRow = FromRowStage <$> field <*> field <*> field <*> field <*> field
+  fromRow = FromRowStage <$> field <*> field <*> field <*> field <*> field <*> field
 
 newtype EnemyCode
   = EnemyCode Int
@@ -69,18 +73,18 @@ newtype EnemyUnitsTSV
   = EnemyUnitsTSV T.Text
 
 data Enemy
-  = Enemy HpSpawn FirstSpawn Target EnemyCode
+  = Enemy HpSpawn FirstSpawn Target EnemyCode IsBoss
   deriving (Eq, Show)
 
 newtype FastestEnemy
   = FastestEnemy Enemy
 
 instance Eq FastestEnemy where
-  FastestEnemy (Enemy _ firstSpawnA _ _) == FastestEnemy (Enemy _ firstSpawnB _ _) =
+  FastestEnemy (Enemy _ firstSpawnA _ _ _) == FastestEnemy (Enemy _ firstSpawnB _ _ _) =
       firstSpawnA == firstSpawnB
 
 instance Ord FastestEnemy where
-  FastestEnemy (Enemy _ firstSpawnA _ _) <= FastestEnemy (Enemy _ firstSpawnB _ _) =
+  FastestEnemy (Enemy _ firstSpawnA _ _ _) <= FastestEnemy (Enemy _ firstSpawnB _ _ _) =
       firstSpawnA <= firstSpawnB
 
 data Stage
