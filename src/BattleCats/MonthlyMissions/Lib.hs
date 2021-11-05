@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings   #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TupleSections       #-}
 module BattleCats.MonthlyMissions.Lib where
 
 import           BattleCats.MonthlyMissions.Types
@@ -12,6 +13,14 @@ import qualified Data.Text                        as T
 import qualified Data.Text.IO                     as TIO
 import           Database.SQLite.Simple
 import           System.Directory
+import           TextShow
+
+eocHack :: Level -> (DBLevel, Energy, [T.Text])
+eocHack level = case level of
+  "EoC Ch.1" -> ("EoC", 0, ["Moon Ch.2", "Moon Ch.3"])
+  "EoC Ch.2" -> ("EoC", 10, ["Moon Ch.1", "Moon Ch.3"])
+  "EoC Ch.3" -> ("EoC", 20, ["Moon Ch.1", "Moon Ch.2"])
+  l          -> (toDBLevel l, 0, [])
 
 getCode :: EnemyUnitsTSV -> Target -> IO EnemyCode
 getCode (EnemyUnitsTSV enemyunits) t@(Target target) = do
@@ -19,48 +28,51 @@ getCode (EnemyUnitsTSV enemyunits) t@(Target target) = do
 
   maybe (throwIO (errorWithoutStackTrace $ "could not find " <> show t :: SomeException)) (return . EnemyCode) maybeIdx
 
+toDBLevel :: Level -> DBLevel
+toDBLevel (Level l) = DBLevel l
+
+toLevel :: DBLevel -> Level
+toLevel (DBLevel l) = Level l
+
 getStages :: Connection -> EnemyUnitsTSV -> Mission -> IO (NonEmpty StageWithEnemy)
 getStages conn enemyunits m@(Mission location target) = do
     code@(EnemyCode enemycode) <- getCode enemyunits target
     stages <- case location of
       LocationLevel level -> do
-                            -- This is a hack for inaccurate EoC stages
-                            let (level', energyAdjustment, excludedStages :: [T.Text]) = case level of
-                                                          "EoC Ch.1" -> ("EoC", 0, ["Moon Ch.2", "Moon Ch.3"])
-                                                          "EoC Ch.2" -> ("EoC", 10, ["Moon Ch.1", "Moon Ch.3"])
-                                                          "EoC Ch.3" -> ("EoC", 20, ["Moon Ch.1", "Moon Ch.2"])
-                                                          l          -> (l, 0, [])
+                            let (level', energyAdjustment, excludedStages) = eocHack level
 
                             let excludedStagesIndex = [0..length excludedStages - 1]
                             let excludedStagesWithIndex = zip excludedStages excludedStagesIndex
 
-                            let extraQuery = foldr (\i acc -> " AND stage != :excludedStage" <> (Query . T.pack . show $ i) <> acc) "" excludedStagesIndex
+                            let extraQuery = foldr (\i acc -> " AND stage != :excludedStage" <> (Query . showt $ i) <> acc) "" excludedStagesIndex
 
-                            let extraParams = (\(s, i) -> (":excludedStage" <> (T.pack . show $ i)) := s) <$> excludedStagesWithIndex
+                            let extraParams = (\(s, i) -> (":excludedStage" <> showt i) := s) <$> excludedStagesWithIndex
 
                             stages <- queryNamed conn ("SELECT category, level, stage, energy, u.hpspawn, u.firstspawn, u.isboss from stages s JOIN units u ON u.stageid = s.stageid WHERE u.enemycode = :enemycode AND level = :level"
                                                     <> extraQuery)
                                                     ([":enemycode" := enemycode, ":level" := level'] <> extraParams)
 
-                            return $ (\(FromRowStage c _ n e h f isBoss) -> FromRowStage c level n (e + energyAdjustment) h f isBoss) <$> stages
+                            return $ (\(FromRowStage c l n e h f isBoss) -> AdjustedFromRowStage c level l n (e + energyAdjustment) h f isBoss) <$> stages
       LocationCategory category -> do
-                            queryNamed conn "SELECT category, level, stage, energy, u.hpspawn, u.firstspawn, u.isboss from stages s JOIN units u ON u.stageid = s.stageid WHERE u.enemycode = :enemycode AND category = :category"
+                            stages <- queryNamed conn "SELECT category, level, stage, energy, u.hpspawn, u.firstspawn, u.isboss from stages s JOIN units u ON u.stageid = s.stageid WHERE u.enemycode = :enemycode AND category = :category"
                                            [":enemycode" := enemycode, ":category" := category]
+
+                            return $ (\(FromRowStage c l n e h f isBoss) -> AdjustedFromRowStage c (toLevel l) l n e h f isBoss) <$> stages
     case nonEmpty stages of
         Nothing -> throwIO (errorWithoutStackTrace $ "could not find " <> show m :: SomeException)
         Just nonEmptyStages -> do
           let sameStageRows = groupBy1
-                              (\(FromRowStage categoryA levelA nameA energyA _ _ _) (FromRowStage categoryB levelB nameB energyB _ _ _) ->
+                              (\(AdjustedFromRowStage categoryA levelA _ nameA energyA _ _ _) (AdjustedFromRowStage categoryB levelB _ nameB energyB _ _ _) ->
                                         Stage categoryA levelA nameA energyA == Stage categoryB levelB nameB energyB)
                               nonEmptyStages
 
           return $ findFastestEnemy target code <$> sameStageRows
 
-findFastestEnemy :: Target -> EnemyCode -> NonEmpty FromRowStage -> StageWithEnemy
-findFastestEnemy t c s@(FromRowStage category level name energy _ _ _ :| _) = (Stage category level name energy, fastestEnemies)
+findFastestEnemy :: Target -> EnemyCode -> NonEmpty AdjustedFromRowStage -> StageWithEnemy
+findFastestEnemy t c s@(AdjustedFromRowStage category level _ name energy _ _ _ :| _) = (Stage category level name energy, fastestEnemies)
     where fastestEnemies = (\(FastestEnemy e) -> e) <$> minimum (FastestEnemy <$> enemies) :| []
           enemies :: NonEmpty Enemy
-          enemies = (\(FromRowStage _ _ _ _ hpSpawn firstSpawn isBoss) -> Enemy hpSpawn firstSpawn t c isBoss) <$> s
+          enemies = (\(AdjustedFromRowStage _ _ _ _ _ hpSpawn firstSpawn isBoss) -> Enemy hpSpawn firstSpawn t c isBoss) <$> s
 
 findMinEnergy :: NonEmpty (NonEmpty StageWithEnemy) -> MinEnergyStages
 findMinEnergy stageEnemies = minimum stages
@@ -75,7 +87,7 @@ combineEnemies :: NonEmpty Enemy -> Maybe (NonEmpty Enemy) -> NonEmpty Enemy
 combineEnemies newEnemies (Just enemies) = newEnemies <> enemies
 combineEnemies newEnemies Nothing        = newEnemies
 
-getMinStages :: NonEmpty Mission -> IO MinEnergyStages
+getMinStages :: NonEmpty Mission -> IO MinEnergyStagesWithMap
 getMinStages missions = do
   enemyunitsPath <- getXdgDirectory XdgData "./monthly-missions/data/enemyunits.tsv"
   enemyunits <- TIO.readFile enemyunitsPath
@@ -87,11 +99,30 @@ getMinStages missions = do
 
   stagess <- traverse (getStages conn eu) missions
 
+  let MinEnergyStages minEnergyStagess = findMinEnergy stagess
+
+  stagessWithMap <- traverse (\(s, es) -> (s, es, ) <$> whereIsStage conn s) minEnergyStagess
+
   close conn
 
-  return $ findMinEnergy stagess
+  return $ MinEnergyStagesWithMap stagessWithMap
 
--- whereIsStage :: Connection -> Stage -> NonEmpty (NonEmpty Stage)
--- whereIsStage conn (Stage l s _) = queryNamed conn
---                   ("SELECT group_concat(stage, ',') FROM stages WHERE category = 'SoL' GROUP BY 'level'")
---                   [":category" := enemycode, ":category" := category]
+whereIsStage :: Connection -> Stage -> IO Map
+whereIsStage conn (Stage c l s _) = do
+    let (dbLevel, _, excludedStages) = eocHack l
+    stages <- queryNamed conn
+                  "SELECT group_concat(stage, ';'), level, category FROM stages where category = :category GROUP BY category, level order by stageid"
+                  [":category" := c]
+
+    case nonEmpty stages of
+        Nothing -> throwIO (errorWithoutStackTrace $ "could not find " <> show c :: SomeException)
+        Just nonEmptyStages -> do
+          aggregatedStages <- traverse (\(FromRowStageCategory (StageNames stageNames) level _) -> do
+                                              let ss = filter (`notElem` excludedStages) . T.split (== ';') $ stageNames
+
+                                              case nonEmpty ss of
+                                                Nothing -> throwIO (errorWithoutStackTrace $ "no stages found in " <> show c :: SomeException)
+                                                Just stages' -> return $ AggregatedStages (StageName <$> stages') level c
+               ) nonEmptyStages
+
+          return $ Map $ (\(AggregatedStages sns level _) -> (\sn -> sn == s && level == dbLevel) <$> sns) <$> aggregatedStages

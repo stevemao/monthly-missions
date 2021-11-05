@@ -70,12 +70,16 @@ main = do
   case nonEmpty ms of
     Nothing -> throwIO (errorWithoutStackTrace "You must specify at least one location and enemy. try monthly-missions cotcCh2 'Cat God' cotcCh2 'Shibalien Elite'" :: SomeException)
     Just missions -> do
-      MinEnergyStages stages <- getMinStages missions
+      MinEnergyStagesWithMap stages <- getMinStages missions
 
-      traverse_ (\(stage, enemies) -> do
+      traverse_ (\(stage, enemies, (Map map')) -> do
           BS.putStr "\n"
 
           pPrint stage
+
+          let m' = toList $ (\h -> toList $ (\v -> if v then 'X' else '.') <$> h) <$> map'
+
+          putStr $ unlines m'
 
           traverse (\enemy@(Enemy _ _ _ code _) -> do
                 pPrintIndented enemy
