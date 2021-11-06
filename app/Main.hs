@@ -84,8 +84,8 @@ main = do
 
               BS.putStr "         "
               terminalImage code
-              BS.putStr "\n" ) enemies 
-        
+              BS.putStr "\n" ) enemies
+
         putStr $ unlines m' ) stages
 
 pPrintIndented :: (MonadIO m, Show a) => a -> m ()

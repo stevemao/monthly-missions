@@ -57,6 +57,7 @@ test-suite monthly-missions-test
                      , monthly-missions
                      , hspec
                      , QuickCheck
+                     , quickcheck-instances
   ghc-options:         -Wall -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
 
