@@ -91,7 +91,7 @@ data Stage
   deriving (Eq, Show)
 
 getEnergy :: NonEmpty Stage -> Energy
-getEnergy = foldr (\(Stage _ _ _ e) -> (e +)) 0
+getEnergy ss = sum $ (\(Stage _ _ _ e) -> e) <$> ss
 
 getEnergy' :: NonEmpty StageWithEnemy -> Energy
 getEnergy' stages = getEnergy ((^. _1) <$> stages)
