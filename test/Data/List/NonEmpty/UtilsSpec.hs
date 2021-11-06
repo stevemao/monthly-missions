@@ -32,11 +32,11 @@ spec = do
     it "should foldr2NonEmpty" $ property prop_foldr2NonEmpty
 
 prop_emptyList :: Fun Integer Bool -> Bool
-prop_emptyList f = isNothing (findValueIndex (applyFun f) [])
+prop_emptyList f = isNothing $ findValueIndex (applyFun f) []
 
 prop_nonEmptyList :: Fun Integer Bool -> NonEmpty Integer -> Bool
-prop_nonEmptyList f as = case findValueIndex f' (NE.toList as) of
-    Nothing              -> isNothing (find f' as)
+prop_nonEmptyList f as = case findValueIndex f' $ NE.toList as of
+    Nothing              -> isNothing $ find f' as
     Just (a, index, as') -> find f' as == Just a && index >= 0 && as' == as
     where f' = applyFun f
 
@@ -49,7 +49,7 @@ prop_positive_replace index a as = length as == length as' && if index' >= lengt
           index' = getNonNegative index
 
 prop_negative_replace :: Negative Int -> Integer -> NonEmpty Integer -> Bool
-prop_negative_replace index a as = length as == length as' && as == as'
+prop_negative_replace index a as = as == as'
     where as' :: NonEmpty Integer
           as' = replace index' a as
           index' = getNegative index
