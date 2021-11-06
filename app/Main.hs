@@ -73,22 +73,20 @@ main = do
       MinEnergyStagesWithMap stages <- getMinStages missions
 
       traverse_ (\(stage, enemies, (Map map')) -> do
-          BS.putStr "\n"
+        BS.putStr "\n"
 
-          pPrint stage
+        pPrint stage
 
-          let m' = toList $ (\h -> toList $ (\v -> if v then 'X' else '.') <$> h) <$> map'
+        let m' = toList $ (\h -> toList $ (\v -> if v then 'X' else '.') <$> h) <$> map'
 
-          putStr $ unlines m'
+        traverse_ (\enemy@(Enemy _ _ _ code _) -> do
+              pPrintIndented enemy
 
-          traverse (\enemy@(Enemy _ _ _ code _) -> do
-                pPrintIndented enemy
-
-                BS.putStr "         "
-                terminalImage code
-                BS.putStr "\n"
-            ) enemies
-          ) stages
+              BS.putStr "         "
+              terminalImage code
+              BS.putStr "\n" ) enemies 
+        
+        putStr $ unlines m' ) stages
 
 pPrintIndented :: (MonadIO m, Show a) => a -> m ()
 pPrintIndented = pPrintOpt CheckColorTty defaultOutputOptionsDarkBg
