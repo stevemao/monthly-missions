@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings          #-}
+{-# LANGUAGE OverloadedStrings #-}
 module BattleCats.MonthlyMissions.LibSpec (main, spec) where
 
 import           BattleCats.MonthlyMissions.Lib
