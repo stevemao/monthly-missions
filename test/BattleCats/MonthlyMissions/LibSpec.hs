@@ -1,14 +1,10 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE OverloadedStrings          #-}
-{-# LANGUAGE StandaloneDeriving         #-}
 module BattleCats.MonthlyMissions.LibSpec (main, spec) where
 
 import           BattleCats.MonthlyMissions.Lib
 import           BattleCats.MonthlyMissions.Types
 import           Data.List.NonEmpty               (NonEmpty ((:|)))
 import           Test.Hspec
-import           Test.QuickCheck
-import           Test.QuickCheck.Instances        ()
 
 -- `main` is here so that this module can be run from GHCi on its own.  It is
 -- not needed for automatic spec discovery.
@@ -19,7 +15,7 @@ enemyWithDefault :: HpSpawn -> FirstSpawn -> Target -> Enemy
 enemyWithDefault hpSpawn firstSpawn target = Enemy hpSpawn firstSpawn target (EnemyCode 360) (IsBoss False)
 
 stageWithDefault :: Level -> StageName -> Energy -> Stage
-stageWithDefault l s e = Stage (Category "Story Mode") l s e
+stageWithDefault = Stage (Category "Story Mode")
 
 spec :: Spec
 spec = do
@@ -508,35 +504,3 @@ spec = do
       let (MinEnergyStages stages) = findMinEnergy group
 
       stages `shouldBe` expected
-  describe "quickcheck findMinEnergy" $ do
-    it "is idempotent" $ property $ prop_findMinEnergy
-
-deriving instance Arbitrary HpSpawn
-
-deriving instance Arbitrary FirstSpawn
-
-deriving instance Arbitrary Target
-
-deriving instance Arbitrary EnemyCode
-
-deriving instance Arbitrary IsBoss
-
-deriving instance Arbitrary Category
-
-deriving instance Arbitrary Level
-
-deriving instance Arbitrary StageName
-
-deriving instance Arbitrary Energy
-
-instance Arbitrary Enemy where
-    arbitrary = Enemy <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary
-
-instance Arbitrary Stage where
-    arbitrary = Stage <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary
-
-prop_findMinEnergy :: NonEmpty (NonEmpty StageWithEnemy) -> Bool
-prop_findMinEnergy group = findMinEnergy group == MinEnergyStages ((stageWithDefault (Level "CotC Ch.2") (StageName "The Big Bang") (Energy 110), enemyWithDefault (HpSpawn "100%") (FirstSpawn 300) (Target "Shibalien Elite") :| [
-                                                            enemyWithDefault (HpSpawn "50%") (FirstSpawn 0) (Target "Star Peng")
-                                                            , enemyWithDefault (HpSpawn "100%") (FirstSpawn 200) (Target "Cat God")
-                                                        ]) :| [])
