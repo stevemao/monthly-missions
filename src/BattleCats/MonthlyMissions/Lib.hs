@@ -77,7 +77,7 @@ findFastestEnemy t c s@(AdjustedFromRowStage category level name energy _ _ _ :|
 findMinEnergy :: NonEmpty (NonEmpty StageWithEnemy) -> MinEnergyStages
 findMinEnergy stageEnemies = minimum stages
   where combinitions = sequence stageEnemies
-        uniqCombinitions = loop updateEnemies <$> combinitions
+        uniqCombinitions = foldr2NonEmpty updateEnemies <$> combinitions
         stages = MinEnergyStages <$> uniqCombinitions
 
 updateEnemies :: StageWithEnemy -> [StageWithEnemy] -> NonEmpty StageWithEnemy
