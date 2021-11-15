@@ -111,7 +111,7 @@ whereIsStage :: Connection -> Stage -> IO Map
 whereIsStage conn (Stage c l s _) = do
     let (dbLevel, _, excludedStages) = eocHack l
     stages <- queryNamed conn
-                  "SELECT group_concat(stage, ';'), level, category FROM stages where category = :category GROUP BY category, level order by stageid"
+                  "SELECT group_concat(stage, ';'), level, category FROM stages where category = :category GROUP BY category, level order by stageid desc"
                   [":category" := c]
 
     case nonEmpty stages of

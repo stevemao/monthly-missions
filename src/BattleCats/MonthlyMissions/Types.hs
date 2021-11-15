@@ -100,7 +100,6 @@ type StageWithEnemy = (Stage, NonEmpty Enemy)
 
 newtype MinEnergyStages
   = MinEnergyStages (NonEmpty StageWithEnemy)
-  deriving (Show)
 
 instance Eq MinEnergyStages where
   MinEnergyStages stagesA == MinEnergyStages stagesB =
@@ -112,25 +111,23 @@ instance Ord MinEnergyStages where
 
 newtype StageNames
   = StageNames T.Text
-  deriving (Eq, FromField, Show)
+  deriving (Eq, FromField)
 
 data FromRowStageCategory
   = FromRowStageCategory StageNames DBLevel Category
-  deriving (Eq, Show)
+  deriving (Eq)
 
 instance FromRow FromRowStageCategory where
   fromRow = FromRowStageCategory <$> field <*> field <*> field
 
 data AggregatedStages
   = AggregatedStages (NonEmpty StageName) DBLevel Category
-  deriving (Eq, Show)
+  deriving (Eq)
 
 newtype Map
   = Map (NonEmpty (NonEmpty Bool))
-  deriving (Show)
 
 type StageWithEnemyMap = (Stage, NonEmpty Enemy, Map)
 
 newtype MinEnergyStagesWithMap
   = MinEnergyStagesWithMap (NonEmpty StageWithEnemyMap)
-  deriving (Show)
