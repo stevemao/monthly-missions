@@ -1,2 +1,2 @@
- mkdir -p ~/.local/share/monthly-missions/
- cp data ~/.local/share/monthly-missions/
+mkdir -p ~/.local/share/monthly-missions/
+cp -a data ~/.local/share/monthly-missions/
