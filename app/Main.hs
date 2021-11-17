@@ -55,6 +55,7 @@ fromString "eocCh2"  = LocationLevel "EoC Ch.2"
 fromString "eocCh3"  = LocationLevel "EoC Ch.3"
 fromString "itfCh1"  = LocationLevel "ItF Ch.1"
 fromString "itfCh2"  = LocationLevel "ItF Ch.2"
+fromString "itfCh3"  = LocationLevel "ItF Ch.3"
 fromString "cotcCh1" = LocationLevel "CotC Ch.1"
 fromString "cotcCh2" = LocationLevel "CotC Ch.2"
 fromString "cotcCh3" = LocationLevel "CotC Ch.3"
@@ -72,7 +73,7 @@ main = do
     Just missions -> do
       MinEnergyStagesWithMap stages <- getMinStages missions
 
-      traverse_ (\(stage, enemies, (Map map')) -> do
+      traverse_ (\(stage, enemies, Map map') -> do
         BS.putStr "\n"
 
         pPrint stage
