@@ -26,7 +26,7 @@ newtype FirstSpawn
   deriving (Eq, FromField, Ord, Show)
 
 newtype IsBoss
-  = IsBoss Bool
+  = IsBoss Int
   deriving (Eq, FromField, Show)
 
 newtype Level

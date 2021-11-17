@@ -97,6 +97,8 @@ getMinStages missions = do
   dbPath <- getXdgDirectory XdgData "./monthly-missions/data/stages10.2.db"
   conn <- open dbPath
 
+  setTrace conn (Just TIO.putStrLn)
+
   stagess <- traverse (getStages conn eu) missions
 
   let MinEnergyStages minEnergyStagess = findMinEnergy stagess
