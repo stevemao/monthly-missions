@@ -12,7 +12,7 @@ main :: IO ()
 main = hspec spec
 
 enemyWithDefault :: HpSpawn -> FirstSpawn -> Target -> Enemy
-enemyWithDefault hpSpawn firstSpawn target = Enemy hpSpawn firstSpawn target (EnemyCode 360) (IsBoss False)
+enemyWithDefault hpSpawn firstSpawn target = Enemy hpSpawn firstSpawn target (EnemyCode 360) (IsBoss 0)
 
 stageWithDefault :: Level -> StageName -> Energy -> Stage
 stageWithDefault = Stage (Category "Story Mode")
