@@ -23,4 +23,4 @@ deriving instance Arbitrary Energy
 
 prop_getEnergy :: NonEmpty Energy -> Bool
 prop_getEnergy energies = getEnergy stages == sum energies
-    where stages = Stage "test category" "test level" (StageName "test stage") <$> energies
+    where stages = (\e -> Stage "test category" "test level" (StageName "test stage") e Nothing) <$> energies

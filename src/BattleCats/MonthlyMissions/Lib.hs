@@ -48,31 +48,31 @@ getStages conn enemyunits m@(Mission location target) = do
 
                             let extraParams = (\(s, i) -> (":excludedStage" <> showt i) := s) <$> excludedStagesWithIndex
 
-                            stages <- queryNamed conn ("SELECT category, level, stage, energy, u.hpspawn, u.firstspawn, u.isboss from stages s JOIN units u ON u.stageid = s.stageid WHERE u.enemycode = :enemycode AND level = :level"
+                            stages <- queryNamed conn ("SELECT category, level, stage, energy, schedule, u.hpspawn, u.firstspawn, u.isboss from stages s JOIN units u ON u.stageid = s.stageid WHERE u.enemycode = :enemycode AND level = :level"
                                                     <> extraQuery)
                                                     ([":enemycode" := enemycode, ":level" := level'] <> extraParams)
 
-                            return $ (\(FromRowStage c _ n e h f isBoss) -> AdjustedFromRowStage c level n (e + energyAdjustment) h f isBoss) <$> stages
+                            return $ (\(FromRowStage c _ n e s h f isBoss) -> AdjustedFromRowStage c level n (e + energyAdjustment) s h f isBoss) <$> stages
       LocationCategory category -> do
-                            stages <- queryNamed conn "SELECT category, level, stage, energy, u.hpspawn, u.firstspawn, u.isboss from stages s JOIN units u ON u.stageid = s.stageid WHERE u.enemycode = :enemycode AND category = :category"
+                            stages <- queryNamed conn "SELECT category, level, stage, energy, schedule, u.hpspawn, u.firstspawn, u.isboss from stages s JOIN units u ON u.stageid = s.stageid WHERE u.enemycode = :enemycode AND category = :category"
                                            [":enemycode" := enemycode, ":category" := category]
 
-                            return $ (\(FromRowStage c l n e h f isBoss) -> AdjustedFromRowStage c (toLevel l) n e h f isBoss) <$> stages
+                            return $ (\(FromRowStage c l n e s h f isBoss) -> AdjustedFromRowStage c (toLevel l) n e s h f isBoss) <$> stages
     case nonEmpty stages of
         Nothing -> throwIO (errorWithoutStackTrace $ "could not find " <> show m :: SomeException)
         Just nonEmptyStages -> do
           let sameStageRows = groupBy1
-                              (\(AdjustedFromRowStage categoryA levelA nameA energyA _ _ _) (AdjustedFromRowStage categoryB levelB nameB energyB _ _ _) ->
-                                        Stage categoryA levelA nameA energyA == Stage categoryB levelB nameB energyB)
+                              (\(AdjustedFromRowStage categoryA levelA nameA energyA scheduleA _ _ _) (AdjustedFromRowStage categoryB levelB nameB energyB scheduleB _ _ _) ->
+                                        Stage categoryA levelA nameA energyA scheduleA == Stage categoryB levelB nameB energyB scheduleB)
                               nonEmptyStages
 
           return $ findFastestEnemy target code <$> sameStageRows
 
 findFastestEnemy :: Target -> EnemyCode -> NonEmpty AdjustedFromRowStage -> StageWithEnemy
-findFastestEnemy t c s@(AdjustedFromRowStage category level name energy _ _ _ :| _) = (Stage category level name energy, fastestEnemies)
+findFastestEnemy t c s@(AdjustedFromRowStage category level name energy schedule _ _ _ :| _) = (Stage category level name energy schedule, fastestEnemies)
     where fastestEnemies = (\(FastestEnemy e) -> e) <$> minimum (FastestEnemy <$> enemies) :| []
           enemies :: NonEmpty Enemy
-          enemies = (\(AdjustedFromRowStage _ _ _ _ hpSpawn firstSpawn isBoss) -> Enemy hpSpawn firstSpawn t c isBoss) <$> s
+          enemies = (\(AdjustedFromRowStage _ _ _ _ _ hpSpawn firstSpawn isBoss) -> Enemy hpSpawn firstSpawn t c isBoss) <$> s
 
 findMinEnergy :: NonEmpty (NonEmpty StageWithEnemy) -> MinEnergyStages
 findMinEnergy stageEnemies = minimum stages
@@ -110,7 +110,7 @@ getMinStages missions = do
   return $ MinEnergyStagesWithMap stagessWithMap
 
 whereIsStage :: Connection -> Stage -> IO Map
-whereIsStage conn (Stage c l s _) = do
+whereIsStage conn (Stage c l s _ _) = do
     let (dbLevel, _, excludedStages) = eocHack l
     stages <- queryNamed conn
                   "SELECT group_concat(stage, ';'), level, category FROM stages where category = :category GROUP BY category, level order by stageid desc"

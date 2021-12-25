@@ -38,14 +38,14 @@ newtype DBLevel
   deriving (Eq, FromField, IsString, Show, ToField)
 
 data FromRowStage
-  = FromRowStage Category DBLevel StageName Energy HpSpawn FirstSpawn IsBoss
+  = FromRowStage Category DBLevel StageName Energy (Maybe Schedule) HpSpawn FirstSpawn IsBoss
   deriving (Show)
 
 data AdjustedFromRowStage
-  = AdjustedFromRowStage Category Level StageName Energy HpSpawn FirstSpawn IsBoss
+  = AdjustedFromRowStage Category Level StageName Energy (Maybe Schedule) HpSpawn FirstSpawn IsBoss
 
 instance FromRow FromRowStage where
-  fromRow = FromRowStage <$> field <*> field <*> field <*> field <*> field <*> field <*> field
+  fromRow = FromRowStage <$> field <*> field <*> field <*> field <*> field <*> field <*> field <*> field
 
 newtype EnemyCode
   = EnemyCode Int
@@ -86,12 +86,16 @@ instance Ord FastestEnemy where
   FastestEnemy (Enemy _ firstSpawnA _ _ _) <= FastestEnemy (Enemy _ firstSpawnB _ _ _) =
       firstSpawnA <= firstSpawnB
 
+newtype Schedule
+  = Schedule T.Text
+  deriving (Eq, FromField, Show)
+
 data Stage
-  = Stage Category Level StageName Energy
+  = Stage Category Level StageName Energy (Maybe Schedule)
   deriving (Eq, Show)
 
 getEnergy :: NonEmpty Stage -> Energy
-getEnergy ss = sum $ (\(Stage _ _ _ e) -> e) <$> ss
+getEnergy ss = sum $ (\(Stage _ _ _ e _) -> e) <$> ss
 
 getEnergy' :: NonEmpty StageWithEnemy -> Energy
 getEnergy' stages = getEnergy ((^. _1) <$> stages)
