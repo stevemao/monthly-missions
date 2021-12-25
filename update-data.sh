@@ -12,3 +12,7 @@ cd ../../..
 mv bcu-resources/resources/assets/org/enemy/**/enemy_icon_*.png ./data/enemy
 cd bcu-resources
 git clean -fdx
+cd ..
+
+stack run migrations
+./install.sh
