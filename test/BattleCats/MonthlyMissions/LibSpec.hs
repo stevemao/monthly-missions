@@ -15,7 +15,7 @@ enemyWithDefault :: HpSpawn -> FirstSpawn -> Target -> Enemy
 enemyWithDefault hpSpawn firstSpawn target = Enemy hpSpawn firstSpawn target (EnemyCode 360) (IsBoss 0)
 
 stageWithDefault :: Level -> StageName -> Energy -> Stage
-stageWithDefault l s e = Stage (Category "Story Mode") l s e Nothing
+stageWithDefault l s e = Stage (Category "Story Mode") l s e (Schedule Nothing)
 
 spec :: Spec
 spec = do
