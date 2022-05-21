@@ -5,7 +5,7 @@ import           Database.SQLite.Simple
 
 main :: IO ()
 main = do
-  conn <- open "./data/stages10.2.db"
+  conn <- open "./data/stages.db"
 
   execute_ conn "ALTER TABLE stages ADD schedule TEXT;"
 

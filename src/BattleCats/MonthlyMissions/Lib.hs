@@ -94,7 +94,7 @@ getMinStages missions = do
 
   let eu = EnemyUnitsTSV enemyunits
 
-  dbPath <- getXdgDirectory XdgData "./monthly-missions/data/stages10.2.db"
+  dbPath <- getXdgDirectory XdgData "./monthly-missions/data/stages.db"
   conn <- open dbPath
 
   setTrace conn (Just TIO.putStrLn)
