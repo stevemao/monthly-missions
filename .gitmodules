@@ -1,0 +1,3 @@
+[submodule "bcu-resources"]
+	path = bcu-resources
+	url = git@github.com:battlecatsultimate/bcu-resources.git
